@@ -1,0 +1,94 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended"
+  ],
+  "jsRules": {},
+  "rules": {
+    "arrow-parens": [true, "ban-single-arg-parens"],
+    "arrow-return-shorthand": true,
+    "ban-comma-operator": true,
+    "ban-ts-ignore": true,
+    "comment-format": {
+      "options": ["check-space", "check-uppercase"]
+    },
+    "encoding": true,
+    "file-name-casing": [true, "camel-case"],
+    "increment-decrement": true,
+    "indent": [true, "spaces", 2],
+    "max-classes-per-file": false,
+    "max-line-length": [true, 100],
+    "member-access": {
+      "options": ["check-accessor", "check-constructor", "check-parameter-property"]
+    },
+    "no-default-export": true,
+    "no-default-import": true,
+    "no-duplicate-imports": true,
+    "no-empty": false,
+    "no-import-side-effect": true,
+    "no-invalid-template-strings": true,
+    "no-irregular-whitespace": true,
+    "no-mergeable-namespace": true,
+    "no-object-literal-type-assertion": true,
+    "no-parameter-properties": true,
+    "no-parameter-reassignment": true,
+    "no-redundant-jsdoc": true,
+    "no-require-imports": true,
+    "no-return-await": true,
+    "no-sparse-arrays": true,
+    "no-this-assignment": true,
+    "no-unnecessary-callback-wrapper": true,
+    "no-unused-expression": false,
+    "no-unused-expression-chai": true,
+    "only-arrow-functions": true,
+    "prefer-method-signature": true,
+    "prefer-object-spread": true,
+    "prefer-template": true,
+    "quotemark": {
+      "options": ["single", "avoid-escape"]
+    },
+    "space-within-parens": {
+      "options": 1
+    },
+    "switch-final-break": true,
+    "trailing-comma": {
+      "options": {
+        "esSpecCompliant": true,
+        "multiline": "never",
+        "singleline": "never"
+      }
+    },
+    "typedef": [
+      true,
+      "array-destructuring",
+      "arrow-call-signature",
+      "arrow-parameter",
+      "call-signature",
+      "member-variable-declaration",
+      "object-destructuring",
+      "parameter",
+      "property-declaration"
+    ],
+    "type-literal-delimiter": true,
+    "variable-name": {
+      "options": ["ban-keywords", "check-format", "allow-leading-underscore"]
+    },
+    "whitespace": {
+      "options": [
+        "check-branch",
+        "check-decl",
+        "check-operator",
+        "check-module",
+        "check-separator",
+        "check-type",
+        "check-typecast",
+        "check-preblock",
+        "check-type-operator",
+        "check-rest-spread"
+      ]
+    }
+  },
+  "rulesDirectory": [
+    "tslint-no-unused-expression-chai"
+  ]
+}
