@@ -23,7 +23,7 @@ export abstract class StyledGraphicNode extends GraphicNode {
   }
 
   /**
-   * Style selectors assinged by users of the element.
+   * Style selectors assigned by users of the element.
    */
   private customClasses: string[] = [];
 

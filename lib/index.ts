@@ -1,4 +1,6 @@
 export { GraphicStyle } from './graphicStyle';
+export { InteractiveView } from './interactiveView';
+export { ITargetContext } from './targetContext';
 export { StyledGraphicNode } from './styledGraphicNode';
 
 export { Group } from './elements/group';
