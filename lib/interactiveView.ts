@@ -66,6 +66,9 @@ export class InteractiveView extends View {
 
         this.updateViewport();
         this.notifyObservers();
+
+        event.preventDefault();
+        event.stopPropagation();
         return false;
       };
       context.domNode.addEventListener( 'wheel', onMouseWheel, false );
