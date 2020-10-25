@@ -1,70 +1,47 @@
-import { Box2, Matrix3, Vector2 } from '@daign/math';
+import { Box2, Matrix3, StringArray, StringValue, Vector2, Vector2Array } from '@daign/math';
 import { GraphicNode } from '@daign/2d-pipeline';
 import { StyleSelector } from '@daign/style-sheets';
 
 import { GraphicStyle } from './graphicStyle';
 
 /**
- * Abstract class for graphic nodes to which styles apply.
+ * Abstract class for graphic nodes that are defined by points and to which styles apply.
  */
 export abstract class StyledGraphicNode extends GraphicNode {
-  /**
-   * Array of points that define the element.
-   */
-  protected _points: Vector2[] = [];
+  // Array of points that define the element.
+  public points: Vector2Array = new Vector2Array();
 
-  /**
-   * Setter for the points array.
-   */
-  public set points( input: Vector2[] ) {
-    this._points = input.map( ( point: Vector2 ): Vector2 => {
-      return point.clone();
-    } );
-  }
+  // Class names assinged to the element.
+  private classNames: StringArray = new StringArray();
 
-  /**
-   * Style selectors assigned by users of the element.
-   */
-  private customClasses: string[] = [];
+  // Style selector object containing all class names of the element.
+  public styleSelector: StyleSelector = new StyleSelector();
 
-  /**
-   * Style selector for the element type.
-   */
-  private _baseClass: string | null = null;
+  // Style applied directly to the element.
+  public elementStyle: GraphicStyle | null = null;
 
   /**
    * Setter for the base class.
+   * @param baseClass - The name of the base class.
    */
   protected set baseClass( baseClass: string ) {
-    this._baseClass = baseClass;
-    this.buildStyleSelector();
+    if ( this.classNames.containsName( 'baseClass' ) ) {
+      this.classNames.getByName( 'baseClass' ).value = baseClass;
+    } else {
+      this.classNames.push( new StringValue( baseClass ), 'baseClass' );
+    }
   }
-
-  /**
-   * Style selector object containing all style selectors of the element.
-   */
-  public styleSelector: StyleSelector = new StyleSelector();
-
-  /**
-   * Style applied directly to the element.
-   */
-  public elementStyle: GraphicStyle | null = null;
 
   /**
    * Constructor.
    */
   protected constructor() {
     super();
-  }
 
-  /**
-   * Initialize the element with a given number of points.
-   * @param n - The number of points.
-   */
-  protected createPoints( n: number ): void {
-    for ( let i = 0; i < n; i += 1 ) {
-      this._points.push( new Vector2() );
-    }
+    // Rebuild the style selector object on every class name change.
+    this.classNames.subscribeToChanges( (): void => {
+      this.buildStyleSelector();
+    } );
   }
 
   /**
@@ -73,10 +50,15 @@ export abstract class StyledGraphicNode extends GraphicNode {
    * @returns The array of transformed points.
    */
   public getPointsTransformed( transformation: Matrix3 ): Vector2[] {
-    const points = this._points.map( ( p: Vector2 ): Vector2 => {
-      return p.clone().transform( transformation );
-    } );
-    return points;
+    return this.points.cloneDeep().transform( transformation ).elements;
+  }
+
+  /**
+   * Get the transformed bounding box of all points of the element.
+   * @returns The transformed bounding box.
+   */
+  public getBoxTransformed(): Box2 {
+    return this.getBox().transform( this.transformation.transformMatrix );
   }
 
   /**
@@ -84,33 +66,41 @@ export abstract class StyledGraphicNode extends GraphicNode {
    * @returns The bounding box.
    */
   public getBox(): Box2 {
-    const box = new Box2();
-    this._points.forEach( ( p: Vector2 ): void => {
-      const transformedPoint = p.clone().transform( this.transformation.transformMatrix );
-      box.expandByPoint( transformedPoint );
-    } );
-    return box;
+    return this.points.getBox();
   }
 
   /**
-   * Add a custom class.
-   * @param className - The style selector name.
+   * Add a class name.
+   * @param className - The class name.
    */
   public addClass( className: string ): void {
-    this.customClasses.push( className );
-    this.buildStyleSelector();
+    this.classNames.push( new StringValue( className ) );
+  }
+
+  /**
+   * Add or overwrite a class name by identifier.
+   * @param identifier - The identifier.
+   * @param className - The class name.
+   */
+  public setVariableClass( identifier: string, className: string ): void {
+    if ( identifier === 'baseClass' ) {
+      throw new Error( 'baseClass is a protected identifier.' );
+    }
+
+    if ( this.classNames.containsName( identifier ) ) {
+      this.classNames.getByName( identifier ).value = className;
+    } else {
+      this.classNames.push( new StringValue( className ), identifier );
+    }
   }
 
   /**
    * Construct the style selector object.
    */
   private buildStyleSelector(): void {
-    let selectorString = this.customClasses.map( ( customClass: string ): string =>
-      `.${customClass}`
+    const selectorString = this.classNames.elements.map( ( s: StringValue ): string =>
+      `.${s.value}`
     ).join();
-    if ( this._baseClass ) {
-      selectorString += `.${this._baseClass}`;
-    }
 
     this.styleSelector = new StyleSelector( selectorString );
   }

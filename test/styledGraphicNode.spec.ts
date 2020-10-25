@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 
-import { StyledGraphicNode } from '../lib/styledGraphicNode';
+import { StyledGraphicNode } from '../lib';
 
 class TestNode extends StyledGraphicNode {
   public constructor() {
@@ -10,7 +10,7 @@ class TestNode extends StyledGraphicNode {
 
 describe( 'StyledGraphicNode', (): void => {
   describe( 'addClass', (): void => {
-    it( 'should append class name to array', (): void => {
+    it( 'should append to class names array', (): void => {
       // Arrange
       const node = new TestNode();
 
@@ -18,7 +18,7 @@ describe( 'StyledGraphicNode', (): void => {
       node.addClass( 'SomeName' );
 
       // Assert
-      expect( ( node as any ).customClasses[ 0 ] ).to.equal( 'SomeName' );
+      expect( ( node as any ).classNames.getElement( 0 )!.value ).to.equal( 'SomeName' );
     } );
   } );
 } );
