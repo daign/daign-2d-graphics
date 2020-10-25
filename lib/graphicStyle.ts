@@ -7,6 +7,7 @@ export class GraphicStyle implements IStyleDeclaration {
   public fill: string | null = null;
   public stroke: string | null = null;
   public strokeWidth: number | null = null;
+  public opacity: number | null = null;
   public fontSize: string | null = null;
 
   /**
@@ -17,6 +18,7 @@ export class GraphicStyle implements IStyleDeclaration {
       this.fill === null &&
       this.stroke === null &&
       this.strokeWidth === null &&
+      this.opacity === null &&
       this.fontSize === null
     );
   }
@@ -26,9 +28,11 @@ export class GraphicStyle implements IStyleDeclaration {
    * @param fill - Optional.
    * @param stroke - Optional.
    * @param strokeWidth - Optional.
+   * @param opacity - Optional.
    * @param fontSize - Optional.
    */
-  public constructor( fill?: string, stroke?: string, strokeWidth?: number, fontSize?: string ) {
+  public constructor( fill?: string, stroke?: string, strokeWidth?: number,
+    opacity?: number, fontSize?: string ) {
     if ( fill ) {
       this.fill = fill;
     }
@@ -37,6 +41,9 @@ export class GraphicStyle implements IStyleDeclaration {
     }
     if ( strokeWidth ) {
       this.strokeWidth = strokeWidth;
+    }
+    if ( opacity ) {
+      this.opacity = opacity;
     }
     if ( fontSize ) {
       this.fontSize = fontSize;
@@ -55,6 +62,8 @@ export class GraphicStyle implements IStyleDeclaration {
       this.stroke = value;
     } else if ( name === 'stroke-width' ) {
       this.strokeWidth = parseFloat( value );
+    } else if ( name === 'opacity' ) {
+      this.opacity = parseFloat( value );
     } else if ( name === 'font-size' ) {
       this.fontSize = value;
     }
@@ -73,6 +82,9 @@ export class GraphicStyle implements IStyleDeclaration {
     }
     if ( this.strokeWidth === null ) {
       this.strokeWidth = declaration.strokeWidth;
+    }
+    if ( this.opacity === null ) {
+      this.opacity = declaration.opacity;
     }
     if ( this.fontSize === null ) {
       this.fontSize = declaration.fontSize;

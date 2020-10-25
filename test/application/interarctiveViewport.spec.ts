@@ -2,8 +2,8 @@ import { expect } from 'chai';
 
 import { Vector2 } from '@daign/math';
 
-import { InteractiveView, StyledGraphicNode } from '../lib';
-import { TestContext } from './testContext';
+import { Application, InteractiveViewport, StyledGraphicNode } from '../../lib';
+import { TestContext } from '../testContext';
 
 class TestNode extends StyledGraphicNode {
   public constructor() {
@@ -11,25 +11,27 @@ class TestNode extends StyledGraphicNode {
   }
 }
 
-describe( 'InteractiveView', (): void => {
+describe( 'InteractiveViewport', (): void => {
   describe( 'fitToContent', (): void => {
     it( 'should set the center of the content as the views center', (): void => {
       // Arrange
       const context = new TestContext();
-      const view = new InteractiveView( context );
+      const application = new Application( context );
+      const viewport = new InteractiveViewport( context, application );
+
       const content = new TestNode();
-      content.points = [
+      content.points.elements = [
         new Vector2( 2, 3 ),
         new Vector2( 4, 5 )
       ];
-      view.mountNode( content );
+      viewport.appendChild( content );
 
       // Act
-      view.fitToContent();
+      viewport.fitToContent();
 
       // Assert
       const expectedCenter = new Vector2( 3, 4 );
-      expect( ( view as any ).viewCenter.equals( expectedCenter ) ).to.be.true;
+      expect( ( viewport as any ).viewCenter.equals( expectedCenter ) ).to.be.true;
     } );
   } );
 } );

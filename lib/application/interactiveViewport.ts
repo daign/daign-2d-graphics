@@ -1,16 +1,31 @@
 import { Handle } from '@daign/handle';
 import { Vector2 } from '@daign/math';
-import { MatrixTransform, View } from '@daign/2d-pipeline';
+import { MatrixTransform } from '@daign/2d-pipeline';
+import { Observable } from '@daign/observable';
 
-import { ITargetContext } from './targetContext';
-import { StyledGraphicNode } from './styledGraphicNode';
+import { ITargetContext } from '../iTargetContext';
+import { Application } from './application';
+import { Group } from '../basic-elements/group';
+
+// Observable implementation with a public notify method.
+class ObservableObject extends Observable {
+  public constructor() {
+    super();
+  }
+  public notify(): void {
+    this.notifyObservers();
+  }
+}
 
 /**
- * Interactive View.
+ * Group that acts as an interactive viewport by applying a transformation from user input.
  */
-export class InteractiveView extends View {
+export class InteractiveViewport extends Group {
   // The target drawing context.
   private context: ITargetContext;
+
+  // The corresponding application.
+  private application: Application;
 
   // The transformation applied to the view's content.
   private viewTransformation: MatrixTransform = new MatrixTransform();
@@ -21,14 +36,18 @@ export class InteractiveView extends View {
   // Scaling of the viewport content.
   private viewScale: number = 1;
 
+  // Observable to signal redraw execution.
+  public redrawObservable: ObservableObject = new ObservableObject();
+
   /**
    * Constructor.
    * @param context - The target context.
    */
-  public constructor( context: ITargetContext ) {
+  public constructor( context: ITargetContext, application: Application ) {
     super();
 
     this.context = context;
+    this.application = application;
 
     // Set center of target's drawing space as center.
     this.viewCenter.copy( context.size ).multiplyScalar( 0.5 );
@@ -48,7 +67,13 @@ export class InteractiveView extends View {
         this.viewCenter.drag( drag );
 
         this.updateViewport();
-        this.notifyObservers();
+        this.application.controlLayer.createControls();
+        this.redrawObservable.notify();
+      };
+
+      handle.clicked = (): void => {
+        this.application.controlLayer.deactivateElement();
+        this.redrawObservable.notify();
       };
 
       // Define zoom action.
@@ -65,7 +90,8 @@ export class InteractiveView extends View {
         this.viewCenter.sub( mousePosition ).multiplyScalar( 1 / factor ).add( mousePosition );
 
         this.updateViewport();
-        this.notifyObservers();
+        this.application.controlLayer.createControls();
+        this.redrawObservable.notify();
 
         event.preventDefault();
         event.stopPropagation();
@@ -79,7 +105,7 @@ export class InteractiveView extends View {
    * Set view center and scale so that the content is fully zoomed in the center of the viewport.
    */
   public fitToContent(): void {
-    const contentBox = ( this.anchorNode as StyledGraphicNode ).getBox();
+    const contentBox = this.getBox();
     // Expand area of interest by margin.
     contentBox.expandByScalar( 2 );
 
