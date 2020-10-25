@@ -3,35 +3,23 @@ import { Matrix3, Vector2 } from '@daign/math';
 import { StyledGraphicNode } from '../styledGraphicNode';
 
 /**
- * Class for a circle element defined by two points.
+ * Class for a circle element defined by two points: the center and a point on the circle.
  */
 export class TwoPointCircle extends StyledGraphicNode {
-  /**
-   * Getter for the center position.
-   */
   public get center(): Vector2 {
-    return this._points[ 0 ];
+    return this.points.getByName( 'center' );
   }
 
-  /**
-   * Setter for the center position.
-   */
   public set center( position: Vector2 ) {
-    this._points[ 0 ].copy( position );
+    this.points.getByName( 'center' ).copy( position );
   }
 
-  /**
-   * Getter for the position of a point on the circle.
-   */
   public get circlePoint(): Vector2 {
-    return this._points[ 1 ];
+    return this.points.getByName( 'circlePoint' );
   }
 
-  /**
-   * Setter for the position of a point on the circle.
-   */
   public set circlePoint( position: Vector2 ) {
-    this._points[ 1 ].copy( position );
+    this.points.getByName( 'circlePoint' ).copy( position );
   }
 
   /**
@@ -41,7 +29,9 @@ export class TwoPointCircle extends StyledGraphicNode {
     super();
 
     this.baseClass = 'circle';
-    this.createPoints( 2 );
+    this.points.initializeElements( 2 );
+    this.points.assignName( 'center', 0 );
+    this.points.assignName( 'circlePoint', 1 );
   }
 
   /**

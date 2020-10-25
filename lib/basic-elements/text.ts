@@ -3,31 +3,27 @@ import { Matrix3, Vector2 } from '@daign/math';
 import { StyledGraphicNode } from '../styledGraphicNode';
 
 /**
- * Class for a text element.
+ * Class for a text element at an anchor position.
  */
 export class Text extends StyledGraphicNode {
   /**
    * Getter for the anchor position.
    */
   public get anchor(): Vector2 {
-    return this._points[ 0 ];
+    return this.points.getByName( 'anchor' );
   }
 
   /**
    * Setter for the anchor position.
    */
   public set anchor( position: Vector2 ) {
-    this._points[ 0 ].copy( position );
+    this.points.getByName( 'anchor' ).copy( position );
   }
 
-  /**
-   * The text content of the text element.
-   */
+  // The text content of the text element.
   public content: string = '';
 
-  /**
-   * The attribute defining the alignment of the text relative to its anchor.
-   */
+  // The attribute defining the alignment of the text relative to its anchor.
   public textAnchor: string = 'end';
 
   /**
@@ -37,7 +33,8 @@ export class Text extends StyledGraphicNode {
     super();
 
     this.baseClass = 'text';
-    this.createPoints( 1 );
+    this.points.initializeElements( 1 );
+    this.points.assignName( 'anchor', 0 );
   }
 
   /**

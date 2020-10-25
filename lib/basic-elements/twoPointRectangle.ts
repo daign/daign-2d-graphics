@@ -3,23 +3,23 @@ import { Box2, Matrix3, Vector2 } from '@daign/math';
 import { StyledGraphicNode } from '../styledGraphicNode';
 
 /**
- * Class for a rectangle element defined by two points.
+ * Class for a rectangle element defined by two corner points.
  */
 export class TwoPointRectangle extends StyledGraphicNode {
   public get start(): Vector2 {
-    return this._points[ 0 ];
+    return this.points.getByName( 'start' );
   }
 
   public set start( position: Vector2 ) {
-    this._points[ 0 ].copy( position );
+    this.points.getByName( 'start' ).copy( position );
   }
 
   public get end(): Vector2 {
-    return this._points[ 1 ];
+    return this.points.getByName( 'end' );
   }
 
   public set end( position: Vector2 ) {
-    this._points[ 1 ].copy( position );
+    this.points.getByName( 'end' ).copy( position );
   }
 
   /**
@@ -29,7 +29,9 @@ export class TwoPointRectangle extends StyledGraphicNode {
     super();
 
     this.baseClass = 'rectangle';
-    this.createPoints( 2 );
+    this.points.initializeElements( 2 );
+    this.points.assignName( 'start', 0 );
+    this.points.assignName( 'end', 1 );
   }
 
   /**

@@ -24,14 +24,9 @@ export class Group extends StyledGraphicNode {
     const box = new Box2();
     this.children.forEach( ( child: GraphicNode ): void => {
       if ( child instanceof StyledGraphicNode ) {
-        box.expandByBox( child.getBox() );
+        box.expandByBox( child.getBoxTransformed() );
       }
     } );
-    const min = box.min.clone().transform( this.transformation.transformMatrix );
-    const max = box.max.clone().transform( this.transformation.transformMatrix );
-    const transformedBox = new Box2();
-    transformedBox.expandByPoint( min );
-    transformedBox.expandByPoint( max );
-    return transformedBox;
+    return box;
   }
 }

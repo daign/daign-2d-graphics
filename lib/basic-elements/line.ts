@@ -7,19 +7,19 @@ import { StyledGraphicNode } from '../styledGraphicNode';
  */
 export class Line extends StyledGraphicNode {
   public get start(): Vector2 {
-    return this._points[ 0 ];
+    return this.points.getByName( 'start' );
   }
 
   public set start( position: Vector2 ) {
-    this._points[0].copy( position );
+    this.points.getByName( 'start' ).copy( position );
   }
 
   public get end(): Vector2 {
-    return this._points[ 1 ];
+    return this.points.getByName( 'end' );
   }
 
   public set end( position: Vector2 ) {
-    this._points[ 1 ].copy( position );
+    this.points.getByName( 'end' ).copy( position );
   }
 
   /**
@@ -29,7 +29,9 @@ export class Line extends StyledGraphicNode {
     super();
 
     this.baseClass = 'line';
-    this.createPoints( 2 );
+    this.points.initializeElements( 2 );
+    this.points.assignName( 'start', 0 );
+    this.points.assignName( 'end', 1 );
   }
 
   /**

@@ -1,3 +1,4 @@
+export { FixedRadiusCircle } from './fixedRadiusCircle';
 export { Group } from './group';
 export { Line } from './line';
 export { Polyline } from './polyline';
