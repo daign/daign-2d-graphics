@@ -20,16 +20,20 @@ export class ControlPoint extends FixedRadiusCircle {
   // The corresponding control object.
   private controlObject: ControlObject;
 
+  // The index of the point in the points array of the control object.
+  private controlIndex: number;
+
   /**
    * Constructor.
    * @param targetPoint - The point coordinates to display and modify.
    * @param targetTransformation - The transformation matrix of the control object.
    * @param application - The corresponding application.
    * @param controlObject - The corresponding control object.
+   * @param controlIndex - The index of the point in the points array of the control object.
    */
   public constructor(
     targetPoint: Vector2, targetTransformation: Matrix3, application: Application,
-    controlObject: ControlObject
+    controlObject: ControlObject, controlIndex: number
   ) {
     super();
     this.radius = 15;
@@ -38,8 +42,11 @@ export class ControlPoint extends FixedRadiusCircle {
     this.targetTransformation = targetTransformation;
     this.application = application;
     this.controlObject = controlObject;
+    this.controlIndex = controlIndex;
 
     this.center = this.targetPoint.clone().transform( this.targetTransformation );
+
+    this.baseClass = 'controlPoint';
   }
 
   /**
@@ -58,9 +65,18 @@ export class ControlPoint extends FixedRadiusCircle {
     // TODO Get the correct presentation node that corresponds to the application's view.
     const presentationNode = this.controlObject.presentationNodes[ 0 ];
 
-    this.targetPoint.copy( this.center ).transform( presentationNode.projectViewToNode );
+    const calculatedPosition = this.center.clone().transform( presentationNode.projectViewToNode );
 
-    this.application.controlLayer.createControls();
+    if ( this.controlObject.controlModifier ) {
+      // If a control modifier exists, then apply the calculated position through it.
+      this.controlObject.controlModifier.applyPosition( this.controlObject, this.controlIndex,
+        calculatedPosition );
+    } else {
+      // Else apply the calculated position directly.
+      this.targetPoint.copy( calculatedPosition );
+    }
+
+    this.application.createControls();
     this.application.drawingLayer.redrawObservable.notify();
   }
 }

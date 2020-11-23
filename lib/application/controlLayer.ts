@@ -1,6 +1,8 @@
 import { Vector2 } from '@daign/math';
 
 import { Group } from '../basic-elements';
+import { ButtonControl } from './buttonControl';
+import { ButtonObject } from './buttonObject';
 import { ControlObject } from './controlObject';
 import { ControlPoint } from './controlPoint';
 import { Application } from './application';
@@ -49,14 +51,19 @@ export class ControlLayer extends Group {
   public createControls(): void {
     this.clearChildren();
     if ( this.activeElement !== null ) {
-      this.activeElement.points.iterate( ( point: Vector2 ): void => {
-        // TODO Get the correct presentation node that corresponds to the application's view.
-        const transformation = this.activeElement!.presentationNodes[ 0 ].projectNodeToView;
+      // TODO Get the correct presentation node that corresponds to the application's view.
+      const transformation = this.activeElement!.presentationNodes[ 0 ].projectNodeToView;
 
+      this.activeElement.points.iterate( ( point: Vector2, index: number ): void => {
         const controlPoint = new ControlPoint( point, transformation, this.application,
-          this.activeElement! );
+          this.activeElement!, index );
         this.appendChild( controlPoint );
       } );
+
+      this.activeElement.buttons.forEach( ( button: ButtonObject ): void => {
+        const buttonControl = new ButtonControl( button, transformation, this.application );
+        this.appendChild( buttonControl );
+      } )
     }
   }
 }

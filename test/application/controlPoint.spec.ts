@@ -24,7 +24,7 @@ describe( 'ControlPoint', (): void => {
 
       // Act
       const controlPoint = new ControlPoint( targetPoint, targetTransformation, application,
-        controlObject );
+        controlObject, 0 );
 
       // Assert
       expect( controlPoint.center.equals( new Vector2( 3, 5 ) ) ).to.be.true;

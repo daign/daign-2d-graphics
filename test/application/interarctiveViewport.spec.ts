@@ -1,37 +1,34 @@
 import { expect } from 'chai';
+import * as sinon from 'sinon';
 
-import { Vector2 } from '@daign/math';
+import { MockDocument, MockNode } from '@daign/mock-dom';
 
-import { Application, InteractiveViewport, StyledGraphicNode } from '../../lib';
+import { Application, InteractiveViewport } from '../../lib';
 import { TestContext } from '../testContext';
 
-class TestNode extends StyledGraphicNode {
-  public constructor() {
-    super();
-  }
-}
+declare var global: any;
 
 describe( 'InteractiveViewport', (): void => {
-  describe( 'fitToContent', (): void => {
-    it( 'should set the center of the content as the views center', (): void => {
-      // Arrange
-      const context = new TestContext();
-      const application = new Application( context );
-      const viewport = new InteractiveViewport( context, application );
+  beforeEach( (): void => {
+    global.document = new MockDocument();
+  } );
 
-      const content = new TestNode();
-      content.points.elements = [
-        new Vector2( 2, 3 ),
-        new Vector2( 4, 5 )
-      ];
-      viewport.appendChild( content );
+  describe( 'constructor', (): void => {
+    it( 'should add 3 event listeners to the dom node', (): void => {
+      // Arrange
+      const domNode = new MockNode();
+      const context = new TestContext();
+      context.domNode = domNode;
+      const application = new Application( context );
+      const addEventListenerSpy = sinon.spy( domNode, 'addEventListener' );
 
       // Act
-      viewport.fitToContent();
+      // tslint:disable-next-line:no-unused-expression-chai
+      new InteractiveViewport( context, application );
 
       // Assert
-      const expectedCenter = new Vector2( 3, 4 );
-      expect( ( viewport as any ).viewCenter.equals( expectedCenter ) ).to.be.true;
+      expect( addEventListenerSpy.called ).to.be.true;
+      expect( addEventListenerSpy.callCount ).to.equal( 3 );
     } );
   } );
 } );

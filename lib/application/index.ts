@@ -1,6 +1,10 @@
 export { Application } from './application';
 export { ApplicationView } from './applicationView';
+export { ButtonControl } from './buttonControl';
+export { ButtonObject } from './buttonObject';
 export { ControlLayer } from './controlLayer';
 export { ControlPoint } from './controlPoint';
 export { ControlObject } from './controlObject';
+export { IControlModifier } from './iControlModifier';
 export { InteractiveViewport } from './interactiveViewport';
+export { Viewport } from './viewport';
