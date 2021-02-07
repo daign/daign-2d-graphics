@@ -53,7 +53,7 @@ export class Viewport extends Group {
     // Set center of target's drawing space as center.
     this.viewCenter.copy( context.size ).multiplyScalar( 0.5 );
 
-    this.transformation.append( this.viewTransformation );
+    this.transformation.push( this.viewTransformation );
   }
 
   /**
