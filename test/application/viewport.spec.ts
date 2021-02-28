@@ -27,7 +27,7 @@ describe( 'Viewport', (): void => {
       viewport.appendChild( content );
 
       // Act
-      viewport.fitToContent();
+      viewport.fitToContent( 2 );
 
       // Assert
       const expectedCenter = new Vector2( 3, 4 );

@@ -58,11 +58,14 @@ export class Viewport extends Group {
 
   /**
    * Set view center and scale so that the content is fully zoomed in the center of the viewport.
+   * @param margin - The margin to leave around the content. Optional.
    */
-  public fitToContent(): void {
+  public fitToContent( margin?: number ): void {
     const contentBox = this.getBox();
     // Expand area of interest by margin.
-    contentBox.expandByScalar( 2 );
+    if ( margin ) {
+      contentBox.expandByScalar( margin );
+    }
 
     const scaling = this.context.size.clone().divide( contentBox.size );
     // Scaling should be the same in both directions.

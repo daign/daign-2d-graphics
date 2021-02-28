@@ -1,4 +1,4 @@
-import { Matrix3, Vector2 } from '@daign/math';
+import { Box2, Matrix3, Vector2 } from '@daign/math';
 
 import { StyledGraphicNode } from '../styledGraphicNode';
 
@@ -54,5 +54,17 @@ export class TwoPointCircle extends StyledGraphicNode {
   public getCenterTransformed( transformation: Matrix3 ): Vector2 {
     const centerPoint = this.center.clone().transform( transformation );
     return centerPoint;
+  }
+
+  /**
+   * Get the bounding box of the circle.
+   * @returns The bounding box.
+   */
+  public getBox(): Box2 {
+    const box = new Box2();
+    const radius = this.center.distanceTo( this.circlePoint );
+    box.expandByPoint( this.center );
+    box.expandByScalar( radius )
+    return box;
   }
 }

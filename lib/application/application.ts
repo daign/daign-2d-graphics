@@ -39,9 +39,10 @@ export class Application extends Group {
 
   /**
    * Zoom and pan content to fit viewport.
+   * @param margin - The margin to leave around the content. Optional.
    */
-  public fitToContent(): void {
-    this.drawingLayer.fitToContent();
+  public fitToContent( margin?: number ): void {
+    this.drawingLayer.fitToContent( margin );
   }
 
   /**
