@@ -49,6 +49,20 @@ export class TwoPointRectangle extends StyledGraphicNode {
   }
 
   /**
+   * Calculate the end after a given transformation.
+   * @param transformation - The transformation to apply.
+   * @returns The transformed end position.
+   */
+  public getEndTransformed( transformation: Matrix3 ): Vector2 {
+    const area = new Box2();
+    const startPoint = this.start.clone().transform( transformation );
+    area.expandByPoint( startPoint );
+    const endPoint = this.end.clone().transform( transformation );
+    area.expandByPoint( endPoint );
+    return area.max;
+  }
+
+  /**
    * Calculate the size after a given transformation.
    * @param transformation - The transformation to apply.
    * @returns The transformed size.

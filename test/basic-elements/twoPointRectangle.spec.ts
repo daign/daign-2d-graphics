@@ -32,4 +32,20 @@ describe( 'TwoPointRectangle', (): void => {
       expect( start.equals( new Vector2( 2, 2 ) ) ).to.be.true;
     } );
   } );
+
+  describe( 'getEndTransformed', (): void => {
+    it( 'should return the transformed end', (): void => {
+      // Arrange
+      const rectangle = new TwoPointRectangle();
+      rectangle.start = new Vector2( 1, 1 );
+      rectangle.end = new Vector2( 3, 3 );
+      const transformation = new Matrix3().setScaling( new Vector2( 2, 2 ) );
+
+      // Act
+      const end = rectangle.getEndTransformed( transformation );
+
+      // Assert
+      expect( end.equals( new Vector2( 6, 6 ) ) ).to.be.true;
+    } );
+  } );
 } );
