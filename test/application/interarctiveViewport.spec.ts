@@ -9,16 +9,6 @@ import { TestContext } from '../testContext';
 
 declare var global: any;
 
-/**
- * Sleep function.
- * @param milliseconds - The time to pause code execution.
- */
-const sleep = ( milliseconds: number ): Promise<void> => {
-  return new Promise( ( resolve: any ): void => {
-    setTimeout( resolve, milliseconds );
-  } );
-};
-
 describe( 'InteractiveViewport', (): void => {
   beforeEach( (): void => {
     global.document = new MockDocument();
@@ -61,7 +51,7 @@ describe( 'InteractiveViewport', (): void => {
   } );
 
   describe( 'drag handling', (): void => {
-    it( 'should update the viewport center', async (): Promise<void> => {
+    it( 'should update the viewport center', (): void => {
       // Arrange
       const domNode = new MockNode();
       const context = new TestContext();
@@ -80,9 +70,6 @@ describe( 'InteractiveViewport', (): void => {
       domNode.sendEvent( 'mousedown', startEvent );
       global.document.sendEvent( 'mousemove', dragEvent );
       global.document.sendEvent( 'mouseup', endEvent );
-
-      // Wait until throttling function is finished.
-      await sleep( 50 );
 
       // Assert
       const expectedCenter = new Vector2( -0.5, -9.5 );
