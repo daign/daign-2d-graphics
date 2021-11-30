@@ -1,4 +1,4 @@
-import { Handle } from '@daign/handle';
+import { ScrollHandle } from '@daign/handle';
 import { Vector2 } from '@daign/math';
 
 import { ITargetContext } from '../iTargetContext';
@@ -9,6 +9,9 @@ import { Viewport } from './viewport';
  * Group that acts as an interactive viewport by applying a transformation from user input.
  */
 export class InteractiveViewport extends Viewport {
+  // The object that handles the events on the viewport node.
+  private viewportHandle: ScrollHandle | undefined = undefined;
+
   /**
    * Constructor.
    * @param context - The target context.
@@ -18,8 +21,16 @@ export class InteractiveViewport extends Viewport {
     super( context, application );
 
     if ( context.domNode ) {
+      const minimumDragDistance = 5;
+      const extractFromEvent = ( event: any ): Vector2 => {
+        return new Vector2().setFromEventRelative( event );
+      };
+
+      // The object that handles the events on the viewport node.
+      const handle = new ScrollHandle( context.domNode, minimumDragDistance, extractFromEvent );
+      this.viewportHandle = handle;
+
       // Define pan action.
-      const handle = new Handle( context.domNode );
       handle.beginning = (): boolean => {
         this.viewCenter.snap();
         return true;
@@ -34,33 +45,39 @@ export class InteractiveViewport extends Viewport {
         this.redrawObservable.notify();
       };
 
+      // Define action to deactivate element.
       handle.clicked = (): void => {
         this.application.deactivateElement();
         this.redrawObservable.notify();
       };
 
       // Define zoom action.
-      const onMouseWheel = ( event: any ): boolean => {
-        const sign = Math.sign( event.deltaY );
+      handle.scrolling = (): void => {
+        const sign = Math.sign( handle.scroll.y );
         let factor = Math.pow( 1.1, -sign );
 
         const oldScale = this.viewScale;
         this.viewScale = Math.max( 0.01, Math.min( 1000, oldScale * factor ) );
         factor = this.viewScale / oldScale;
 
-        const mousePosition = new Vector2().setFromEventRelative( event );
+        const mousePosition = handle.scrollPosition.clone();
         mousePosition.transform( this.transformation.inverseTransformMatrix );
         this.viewCenter.sub( mousePosition ).multiplyScalar( 1 / factor ).add( mousePosition );
 
         this.updateViewport();
         this.application.createControls();
         this.redrawObservable.notify();
-
-        event.preventDefault();
-        event.stopPropagation();
-        return false;
       };
-      context.domNode.addEventListener( 'wheel', onMouseWheel, false );
+    }
+  }
+
+  /**
+   * Enable or disable the viewport actions like panning and zooming.
+   * @param enabled - Whether to enable or disable the actions.
+   */
+  public enableViewportActions( enabled: boolean ): void {
+    if ( this.viewportHandle ) {
+      this.viewportHandle.enabled = enabled;
     }
   }
 }
