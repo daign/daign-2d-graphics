@@ -15,6 +15,8 @@ export { ControlModifier } from './control-modifiers/controlModifier';
 export { ControlModifierChain } from './control-modifiers/controlModifierChain';
 export { FollowAlongModifier } from './control-modifiers/followAlongModifier';
 export { OrthogonalModifier } from './control-modifiers/orthogonalModifier';
+export { RoundFollowingModifier } from './control-modifiers/roundFollowingModifier';
+export { RoundingModifier } from './control-modifiers/roundingModifier';
 
 export { ControlObject } from './control-objects/controlObject';
 
