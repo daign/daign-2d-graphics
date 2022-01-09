@@ -2,9 +2,10 @@ import { Vector2 } from '@daign/math';
 import { MatrixTransform } from '@daign/2d-pipeline';
 import { Observable } from '@daign/observable';
 
-import { ITargetContext } from '../iTargetContext';
-import { Application } from './application';
 import { Group } from '../basic-elements/group';
+import { ITargetContext } from '../iTargetContext';
+
+import { Application } from './application';
 
 // Observable implementation with a public notify method.
 class ObservableObject extends Observable {

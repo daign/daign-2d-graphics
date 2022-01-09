@@ -1,13 +1,14 @@
-import { ButtonObject } from './buttonObject';
+import { ButtonObject } from '../application/buttonObject';
 import { Group } from '../basic-elements/group';
-import { IControlModifier } from './iControlModifier';
+
+import { ControlModifier } from '../control-modifiers/controlModifier';
 
 /**
  * Abstract class for drawing elements that are defined by interactive control points.
  */
 export abstract class ControlObject extends Group {
   // Modifiers that restrict drawing actions.
-  public controlModifier: IControlModifier | null = null;
+  public controlModifier: ControlModifier | null = null;
 
   // Array of button objects.
   public buttons: ButtonObject[] = [];

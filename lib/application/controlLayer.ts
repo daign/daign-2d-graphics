@@ -1,9 +1,10 @@
 import { Vector2 } from '@daign/math';
 
 import { Group } from '../basic-elements';
+import { ControlObject } from '../control-objects/controlObject';
+
 import { ButtonControl } from './buttonControl';
 import { ButtonObject } from './buttonObject';
-import { ControlObject } from './controlObject';
 import { ControlPoint } from './controlPoint';
 import { Application } from './application';
 

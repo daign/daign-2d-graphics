@@ -1,8 +1,8 @@
 import { Group } from '../basic-elements/group';
+import { ControlObject } from '../control-objects/controlObject';
 import { ITargetContext } from '../iTargetContext';
 
 import { ControlLayer } from './controlLayer';
-import { ControlObject } from './controlObject';
 import { InteractiveViewport } from './interactiveViewport';
 import { Viewport } from './viewport';
 

@@ -1,8 +1,9 @@
 import { Vector2, Matrix3 } from '@daign/math';
 
 import { FixedRadiusCircle } from '../basic-elements/fixedRadiusCircle';
+import { ControlObject } from '../control-objects/controlObject';
+
 import { Application } from './application';
-import { ControlObject } from './controlObject';
 
 /**
  * Interactive control point for control objects.
@@ -69,7 +70,7 @@ export class ControlPoint extends FixedRadiusCircle {
 
     if ( this.controlObject.controlModifier ) {
       // If a control modifier exists, then apply the calculated position through it.
-      this.controlObject.controlModifier.applyPosition( this.controlObject, this.controlIndex,
+      this.controlObject.controlModifier.executeModifier( this.controlObject, this.controlIndex,
         calculatedPosition );
     } else {
       // Else apply the calculated position directly.
