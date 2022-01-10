@@ -28,7 +28,8 @@ export class InteractiveViewport extends Viewport {
       };
 
       // The object that handles the events on the viewport node.
-      const handle = new ScrollHandle( context.domNode, minimumDragDistance, extractFromEvent );
+      const handleConfig = { startNode: context.domNode, minimumDragDistance, extractFromEvent };
+      const handle = new ScrollHandle( handleConfig );
       this.viewportHandle = handle;
 
       // Define pan action.
