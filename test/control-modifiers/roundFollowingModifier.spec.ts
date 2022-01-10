@@ -7,12 +7,6 @@ import { RoundFollowingModifier, ControlObject } from '../../lib';
 class TestObject extends ControlObject {
   public constructor() {
     super();
-    this.points.elements = [
-      new Vector2( 1.1, 2.5 ),
-      new Vector2( 3.1, 4.5 ),
-      new Vector2( 5.1, 6.5 ),
-      new Vector2( 7.1, 8.5 )
-    ];
   }
   public redraw(): void {}
 }
@@ -22,18 +16,23 @@ describe( 'RoundFollowingModifier', (): void => {
     it( 'should round the following vectors', (): void => {
       // Arrange
       const modifier = new RoundFollowingModifier();
-      const controlObject = new TestObject();
+      const updatedPoints = [
+        new Vector2( 1.1, 2.5 ),
+        new Vector2( 3.1, 4.5 ),
+        new Vector2( 5.1, 6.5 ),
+        new Vector2( 7.1, 8.5 )
+      ];
       const index = 1;
+      const controlObject = new TestObject();
 
       // Act
-      modifier.executeModifier( controlObject, index, new Vector2( 3.1, 4.5 ) );
+      const modifiedPoints = modifier.modifyPoints( updatedPoints, index, controlObject );
 
       // Assert
-      const points = controlObject.points.elements;
-      expect( points[ 0 ].equals( new Vector2( 1.1, 2.5 ) ) ).to.be.true;
-      expect( points[ 1 ].equals( new Vector2( 3.1, 4.5 ) ) ).to.be.true;
-      expect( points[ 2 ].equals( new Vector2( 5, 7 ) ) ).to.be.true;
-      expect( points[ 3 ].equals( new Vector2( 7, 9 ) ) ).to.be.true;
+      expect( modifiedPoints[ 0 ].equals( new Vector2( 1.1, 2.5 ) ) ).to.be.true;
+      expect( modifiedPoints[ 1 ].equals( new Vector2( 3.1, 4.5 ) ) ).to.be.true;
+      expect( modifiedPoints[ 2 ].equals( new Vector2( 5, 7 ) ) ).to.be.true;
+      expect( modifiedPoints[ 3 ].equals( new Vector2( 7, 9 ) ) ).to.be.true;
     } );
   } );
 } );

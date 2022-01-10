@@ -2,13 +2,16 @@ import { Vector2 } from '@daign/math';
 
 import { ControlObject } from '../control-objects';
 
-import { ControlModifier } from './controlModifier';
+import { IControlModifier } from './iControlModifier';
 
 /**
  * Round following modifier.
  * Round the points that follow the point of the original change request.
  */
-export class RoundFollowingModifier extends ControlModifier {
+export class RoundFollowingModifier implements IControlModifier {
+  // Variable to temporarily disable the control modifier.
+  public enabled: boolean = true;
+
   private precision: number | undefined  = undefined;
 
   /**
@@ -16,8 +19,6 @@ export class RoundFollowingModifier extends ControlModifier {
    * @param precision - The number of decimal places to round to. Optional.
    */
   public constructor( precision?: number ) {
-    super();
-
     if ( precision ) {
       this.precision = precision;
     }
@@ -30,11 +31,15 @@ export class RoundFollowingModifier extends ControlModifier {
    * @param controlObject - The corresponding control object.
    * @returns The modified array of points.
    */
-  public modifyPositions(
+  public modifyPoints(
     updatedPoints: Vector2[],
     pointIndex: number,
     _controlObject: ControlObject
   ): Vector2[] {
+    if ( !this.enabled ) {
+      return updatedPoints;
+    }
+
     // Apply the same difference to all following points.
     const modifiedPoints = updatedPoints.map( ( point: Vector2, index: number ): Vector2 => {
       if ( index > pointIndex ) {

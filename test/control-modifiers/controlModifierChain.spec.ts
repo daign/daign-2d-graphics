@@ -7,31 +7,30 @@ import { ControlModifierChain, OrthogonalModifier, RoundingModifier, ControlObje
 class TestObject extends ControlObject {
   public constructor() {
     super();
-    this.points.elements = [
-      new Vector2( 1, 2 ),
-      new Vector2( 1, 3 )
-    ];
   }
   public redraw(): void {}
 }
 
 describe( 'ControlModifierChain', (): void => {
-  describe( 'executeModifier', (): void => {
+  describe( 'modifyPoints', (): void => {
     it( 'should apply both modifiers', (): void => {
       // Arrange
       const modifierChain = new ControlModifierChain();
       modifierChain.addModifier( new OrthogonalModifier() );
       modifierChain.addModifier( new RoundingModifier() );
-      const controlObject = new TestObject();
+      const updatedPoints = [
+        new Vector2( 1, 2 ),
+        new Vector2( 1.2, 4.2 )
+      ];
       const index = 1;
+      const controlObject = new TestObject();
 
       // Act
-      modifierChain.executeModifier( controlObject, index, new Vector2( 1.2, 4.2 ) );
+      const modifidPoints = modifierChain.modifyPoints( updatedPoints, index, controlObject );
 
       // Assert
-      const points = controlObject.points.elements;
-      expect( points[ 0 ].equals( new Vector2( 1, 2 ) ) ).to.be.true;
-      expect( points[ 1 ].equals( new Vector2( 1, 4 ) ) ).to.be.true;
+      expect( modifidPoints[ 0 ].equals( new Vector2( 1, 2 ) ) ).to.be.true;
+      expect( modifidPoints[ 1 ].equals( new Vector2( 1, 4 ) ) ).to.be.true;
     } );
   } );
 } );

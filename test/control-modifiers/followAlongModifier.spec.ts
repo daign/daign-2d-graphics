@@ -18,22 +18,27 @@ class TestObject extends ControlObject {
 }
 
 describe( 'FollowAlongModifier', (): void => {
-  describe( 'executeModifier', (): void => {
+  describe( 'modifyPoints', (): void => {
     it( 'should apply the difference to the following vectors also', (): void => {
       // Arrange
       const modifier = new FollowAlongModifier();
-      const controlObject = new TestObject();
+      const updatedPoints = [
+        new Vector2( 1, 2 ),
+        new Vector2( 5, 7 ),
+        new Vector2( 5, 6 ),
+        new Vector2( 7, 8 )
+      ];
       const index = 1;
+      const controlObject = new TestObject();
 
       // Act
-      modifier.executeModifier( controlObject, index, new Vector2( 5, 7 ) );
+      const modifiedPoints = modifier.modifyPoints( updatedPoints, index, controlObject );
 
       // Assert
-      const points = controlObject.points.elements;
-      expect( points[ 0 ].equals( new Vector2( 1, 2 ) ) ).to.be.true;
-      expect( points[ 1 ].equals( new Vector2( 5, 7 ) ) ).to.be.true;
-      expect( points[ 2 ].equals( new Vector2( 7, 9 ) ) ).to.be.true;
-      expect( points[ 3 ].equals( new Vector2( 9, 11 ) ) ).to.be.true;
+      expect( modifiedPoints[ 0 ].equals( new Vector2( 1, 2 ) ) ).to.be.true;
+      expect( modifiedPoints[ 1 ].equals( new Vector2( 5, 7 ) ) ).to.be.true;
+      expect( modifiedPoints[ 2 ].equals( new Vector2( 7, 9 ) ) ).to.be.true;
+      expect( modifiedPoints[ 3 ].equals( new Vector2( 9, 11 ) ) ).to.be.true;
     } );
   } );
 } );

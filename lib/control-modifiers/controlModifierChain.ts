@@ -1,15 +1,18 @@
 import { Vector2 } from '@daign/math';
 
-import { ControlObject } from '../control-objects/controlObject';
+import { ControlObject } from '../control-objects';
 
-import { ControlModifier } from './controlModifier';
+import { IControlModifier } from './iControlModifier';
 
 /**
  * Abstract class for a chain of modifiers that restrict or modify the outcome of drawing actions.
  */
-export class ControlModifierChain extends ControlModifier {
+export class ControlModifierChain implements IControlModifier {
+  // Variable to temporarily disable the control modifier.
+  public enabled: boolean = true;
+
   // The array of control modifiers to apply one after the other.
-  private modifiers: ControlModifier[] = [];
+  private modifiers: IControlModifier[] = [];
 
   /* Function that can cancel the execution of the modifier chain in certain cases. Replace this
    * function if needed and return false when execution should be canceled. */
@@ -22,9 +25,7 @@ export class ControlModifierChain extends ControlModifier {
   /**
    * Constructor.
    */
-  public constructor() {
-    super();
-  }
+  public constructor() {}
 
   /**
    * Method that applies the chain of modifiers to the point array.
@@ -33,7 +34,7 @@ export class ControlModifierChain extends ControlModifier {
    * @param controlObject - The corresponding control object.
    * @returns The modified array of points.
    */
-  public modifyPositions(
+  public modifyPoints(
     updatedPoints: Vector2[],
     pointIndex: number,
     controlObject: ControlObject
@@ -49,10 +50,8 @@ export class ControlModifierChain extends ControlModifier {
     // Array of modified points. Will be overwritten during each modifier execution.
     let modifiedPoints = updatedPoints;
 
-    this.modifiers.forEach( ( modifier: ControlModifier ): void => {
-      if ( modifier.enabled ) {
-        modifiedPoints = modifier.modifyPositions( modifiedPoints, pointIndex, controlObject );
-      }
+    this.modifiers.forEach( ( modifier: IControlModifier ): void => {
+      modifiedPoints = modifier.modifyPoints( modifiedPoints, pointIndex, controlObject );
     } );
 
     return modifiedPoints;
@@ -62,7 +61,7 @@ export class ControlModifierChain extends ControlModifier {
    * Add a modifier to the chain of modifiers. Can also be another ModifierChain.
    * @param modifier - The modifier to add.
    */
-  public addModifier( modifier: ControlModifier ): void {
+  public addModifier( modifier: IControlModifier ): void {
     this.modifiers.push( modifier );
   }
 }

@@ -62,20 +62,29 @@ export class ControlPoint extends FixedRadiusCircle {
    * @param delta - The translation delta.
    */
   public drag( delta: Vector2 ): void {
+    // Apply the translation to the last snapshot of the center.
     this.center.drag( delta );
+
     // TODO Get the correct presentation node that corresponds to the application's view.
     const presentationNode = this.controlObject.presentationNodes[ 0 ];
 
+    // Calculate the real world coordinates from the screen coordinates of the control point.
     const calculatedPosition = this.center.clone().transform( presentationNode.projectViewToNode );
 
+    // Create copy of all points of the control object and set the calculated position.
+    let updatedPoints = this.controlObject.points.cloneDeep().elements;
+    updatedPoints[ this.controlIndex ].copy( calculatedPosition );
+
+    // If a control modifier exists, then modify the points through it.
     if ( this.controlObject.controlModifier ) {
-      // If a control modifier exists, then apply the calculated position through it.
-      this.controlObject.controlModifier.executeModifier( this.controlObject, this.controlIndex,
-        calculatedPosition );
-    } else {
-      // Else apply the calculated position directly.
-      this.targetPoint.copy( calculatedPosition );
+      updatedPoints = this.controlObject.controlModifier.modifyPoints( updatedPoints,
+        this.controlIndex, this.controlObject );
     }
+
+    // Copy all coordinates back to the control object.
+    this.controlObject.points.iterate( ( element: Vector2, index: number ): void => {
+      element.copy( updatedPoints[ index ] );
+    } );
 
     this.application.createControls();
     this.application.drawingLayer.redrawObservable.notify();

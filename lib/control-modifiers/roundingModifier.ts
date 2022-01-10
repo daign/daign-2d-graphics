@@ -2,13 +2,16 @@ import { Vector2 } from '@daign/math';
 
 import { ControlObject } from '../control-objects';
 
-import { ControlModifier } from './controlModifier';
+import { IControlModifier } from './iControlModifier';
 
 /**
  * Rounding modifier.
  * Round the point coordinates to the given precision.
  */
-export class RoundingModifier extends ControlModifier {
+export class RoundingModifier implements IControlModifier {
+  // Variable to temporarily disable the control modifier.
+  public enabled: boolean = true;
+
   private precision: number | undefined  = undefined;
 
   /**
@@ -16,8 +19,6 @@ export class RoundingModifier extends ControlModifier {
    * @param precision - The number of decimal places to round to. Optional.
    */
   public constructor( precision?: number ) {
-    super();
-
     if ( precision ) {
       this.precision = precision;
     }
@@ -30,11 +31,15 @@ export class RoundingModifier extends ControlModifier {
    * @param controlObject - The corresponding control object.
    * @returns The modified array of points.
    */
-  public modifyPositions(
+  public modifyPoints(
     updatedPoints: Vector2[],
     pointIndex: number,
     _controlObject: ControlObject
   ): Vector2[] {
+    if ( !this.enabled ) {
+      return updatedPoints;
+    }
+
     const targetPoint = updatedPoints[ pointIndex ];
     targetPoint.round( this.precision );
     return updatedPoints;

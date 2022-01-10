@@ -2,19 +2,20 @@ import { Vector2 } from '@daign/math';
 
 import { ControlObject } from '../control-objects';
 
-import { ControlModifier } from './controlModifier';
+import { IControlModifier } from './iControlModifier';
 
 /**
  * Follow along modifier.
  * The movement of the specified point is applied to all following points also.
  */
-export class FollowAlongModifier extends ControlModifier {
+export class FollowAlongModifier implements IControlModifier {
+  // Variable to temporarily disable the control modifier.
+  public enabled: boolean = true;
+
   /**
    * Constructor.
    */
-  public constructor() {
-    super();
-  }
+  public constructor() {}
 
   /**
    * Modify the position change that has been requested for a control object.
@@ -23,11 +24,15 @@ export class FollowAlongModifier extends ControlModifier {
    * @param controlObject - The corresponding control object.
    * @returns The modified array of points.
    */
-  public modifyPositions(
+  public modifyPoints(
     updatedPoints: Vector2[],
     pointIndex: number,
     controlObject: ControlObject
   ): Vector2[] {
+    if ( !this.enabled ) {
+      return updatedPoints;
+    }
+
     const pointBefore = controlObject.points.getElement( pointIndex );
     const pointAfter = updatedPoints[ pointIndex ];
 
