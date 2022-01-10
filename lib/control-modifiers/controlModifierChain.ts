@@ -22,7 +22,7 @@ export class ControlModifierChain extends ControlModifier {
   /**
    * Constructor.
    */
-  protected constructor() {
+  public constructor() {
     super();
   }
 

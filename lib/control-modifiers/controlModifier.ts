@@ -26,16 +26,15 @@ export abstract class ControlModifier {
    * @param controlObject - The corresponding control object.
    * @returns The modified array of points.
    */
-  public modifyPositions(
+  public abstract modifyPositions(
     updatedPoints: Vector2[],
     _pointIndex: number,
     _controlObject: ControlObject
-  ): Vector2[] {
-    return updatedPoints;
-  }
+  ): Vector2[];
 
   /**
    * Method that applies the modifyPositions method to the control object directly.
+   * This is the function that should be called from the outside.
    * @param controlObject - The control object.
    * @param pointIndex - The index of the point that a change to is being made.
    * @param pointUpdatedPosition - The new position to apply to the point.
@@ -45,12 +44,13 @@ export abstract class ControlModifier {
     pointIndex: number,
     pointUpdatedPosition: Vector2
   ): void {
-    if ( this.enabled ) {
-      const updatedPoints = controlObject.points.cloneDeep().elements;
-      updatedPoints[ pointIndex ].copy( pointUpdatedPosition );
+    let updatedPoints = controlObject.points.cloneDeep().elements;
+    updatedPoints[ pointIndex ].copy( pointUpdatedPosition );
 
-      const modifiedPoints = this.modifyPositions( updatedPoints, pointIndex, controlObject );
-      controlObject.points.elements = modifiedPoints;
+    if ( this.enabled ) {
+      updatedPoints = this.modifyPositions( updatedPoints, pointIndex, controlObject );
     }
+
+    controlObject.points.elements = updatedPoints;
   }
 }

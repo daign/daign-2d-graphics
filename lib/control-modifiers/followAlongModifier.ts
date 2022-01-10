@@ -33,7 +33,7 @@ export class FollowAlongModifier extends ControlModifier {
 
     if ( pointBefore ) {
       // Difference between old and new position.
-      const diff = pointBefore.clone().sub( pointAfter );
+      const diff = pointAfter.clone().sub( pointBefore );
 
       // Apply the same difference to all following points.
       const modifiedPoints = updatedPoints.map( ( point: Vector2, index: number ): Vector2 => {
