@@ -59,9 +59,11 @@ describe( 'InteractiveViewport', (): void => {
       const application = new Application( context );
       const viewport = new InteractiveViewport( context, application );
 
-      const startEvent = new MockEvent().setOffsetPoint( 0, 0 );
-      const dragEvent = new MockEvent().setOffsetPoint( 1, 10 );
-      const endEvent = new MockEvent().setOffsetPoint( 2, 10 );
+      const startEvent = new MockEvent();
+      startEvent.setOffsetPoint( 100, 100 );
+      startEvent.setClientPoint( 0, 0 );
+      const dragEvent = new MockEvent().setClientPoint( 1, 10 );
+      const endEvent = new MockEvent().setClientPoint( 2, 10 );
 
       const startCenter = new Vector2( 0.5, 0.5 );
       expect( ( viewport as any ).viewCenter.equals( startCenter ) ).to.be.true;
