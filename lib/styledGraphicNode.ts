@@ -100,7 +100,7 @@ export abstract class StyledGraphicNode extends GraphicNode {
   private buildStyleSelector(): void {
     const selectorString = this.classNames.elements.map( ( s: StringValue ): string =>
       `.${s.value}`
-    ).join();
+    ).join( '' );
 
     this.styleSelector = new StyleSelector( selectorString );
   }

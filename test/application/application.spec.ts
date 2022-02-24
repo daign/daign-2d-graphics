@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import * as sinon from 'sinon';
 
 import { Application } from '../../lib';
 import { TestContext } from '../testContext';
@@ -26,6 +27,22 @@ describe( 'Application', (): void => {
 
       // Assert
       expect( application.children.length ).to.equal( 2 );
+    } );
+  } );
+
+  describe( 'fitToContent', (): void => {
+    it( 'should call fitToContent on drawingLayer', (): void => {
+      // Arrange
+      const context = new TestContext();
+      const application = new Application( context );
+      const spy = sinon.spy( application.drawingLayer, 'fitToContent' );
+
+      // Act
+      application.fitToContent( 2 );
+
+      // Assert
+      expect( spy.calledOnce ).to.be.true;
+      expect( spy.calledWith( 2 ) ).to.be.true;
     } );
   } );
 } );
