@@ -64,7 +64,7 @@ export class TwoPointCircle extends StyledGraphicNode {
     const box = new Box2();
     const radius = this.center.distanceTo( this.circlePoint );
     box.expandByPoint( this.center );
-    box.expandByScalar( radius )
+    box.expandByScalar( radius );
     return box;
   }
 }

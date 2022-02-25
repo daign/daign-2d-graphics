@@ -48,5 +48,42 @@ describe( 'OrthogonalModifier', (): void => {
       expect( modifiedPoints[ 0 ].equals( new Vector2( 1, 2 ) ) ).to.be.true;
       expect( modifiedPoints[ 1 ].equals( new Vector2( 5, 2 ) ) ).to.be.true;
     } );
+
+    it( 'should not align vector if disabled', (): void => {
+      // Arrange
+      const modifier = new OrthogonalModifier();
+      modifier.enabled = false;
+      const updatedPoints = [
+        new Vector2( 1, 2 ),
+        new Vector2( 1.2, 4 )
+      ];
+      const index = 1;
+      const controlObject = new TestObject();
+
+      // Act
+      const modifiedPoints = modifier.modifyPoints( updatedPoints, index, controlObject );
+
+      // Assert
+      expect( modifiedPoints[ 0 ].equals( new Vector2( 1, 2 ) ) ).to.be.true;
+      expect( modifiedPoints[ 1 ].equals( new Vector2( 1.2, 4 ) ) ).to.be.true;
+    } );
+
+    it( 'should not restrict first point when targeted', (): void => {
+      // Arrange
+      const modifier = new OrthogonalModifier();
+      const updatedPoints = [
+        new Vector2( 5, 6 ),
+        new Vector2( 1, 2 )
+      ];
+      const index = 0;
+      const controlObject = new TestObject();
+
+      // Act
+      const modifiedPoints = modifier.modifyPoints( updatedPoints, index, controlObject );
+
+      // Assert
+      expect( modifiedPoints[ 0 ].equals( new Vector2( 5, 6 ) ) ).to.be.true;
+      expect( modifiedPoints[ 1 ].equals( new Vector2( 1, 2 ) ) ).to.be.true;
+    } );
   } );
 } );

@@ -105,4 +105,20 @@ describe( 'TwoPointCircle', (): void => {
       expect( center.equals( new Vector2( 2, 2 ) ) ).to.be.true;
     } );
   } );
+
+  describe( 'getBox', (): void => {
+    it( 'should get the bounding box of the circle', (): void => {
+      // Arrange
+      const circle = new TwoPointCircle();
+      circle.center = new Vector2( 1, 1 );
+      circle.circlePoint = new Vector2( 1, 3 );
+
+      // Act
+      const box = circle.getBox();
+
+      // Assert
+      expect( box.min.equals( new Vector2( -1, -1 ) ) ).to.be.true;
+      expect( box.max.equals( new Vector2( 3, 3 ) ) ).to.be.true;
+    } );
+  } );
 } );
