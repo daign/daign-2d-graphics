@@ -1,6 +1,7 @@
 import { expect } from 'chai';
 
 import { Vector2 } from '@daign/math';
+import { GraphicNode } from '@daign/2d-pipeline';
 
 import { Group, Line } from '../../lib';
 
@@ -36,6 +37,20 @@ describe( 'Group', (): void => {
       // Assert
       expect( box.min.equals( new Vector2( 1, 0 ) ) ).to.be.true;
       expect( box.max.equals( new Vector2( 7, 8 ) ) ).to.be.true;
+    } );
+
+    it( 'should ignore children that are not StyledGraphicNodes', (): void => {
+      // Arrange
+      const group = new Group();
+
+      const graphicNode = new GraphicNode();
+      group.appendChild( graphicNode );
+
+      // Act
+      const box = group.getBox();
+
+      // Assert
+      expect( box.isEmpty ).to.be.true;
     } );
   } );
 } );
