@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import * as sinon from 'sinon';
 
 import { Matrix3, Vector2 } from '@daign/math';
 
@@ -23,6 +24,28 @@ describe( 'ButtonControl', (): void => {
 
       // Assert
       expect( buttonControl.center.equals( new Vector2( 3, 5 ) ) ).to.be.true;
+    } );
+  } );
+
+  describe( 'click', (): void => {
+    it( 'should call the callback function', (): void => {
+      // Arrange
+      const anchorPoint = new Vector2( 1, 2 );
+      const callbackSpy = sinon.spy();
+      const buttonObject = new ButtonObject( callbackSpy );
+      buttonObject.anchor = anchorPoint;
+
+      const targetTransformation = new Matrix3().setTranslation( new Vector2( 2, 3 ) );
+      const context = new TestContext();
+      const application = new Application( context );
+
+      const buttonControl = new ButtonControl( buttonObject, targetTransformation, application );
+
+      // Act
+      buttonControl.click();
+
+      // Assert
+      expect( callbackSpy.calledOnce ).to.be.true;
     } );
   } );
 } );
