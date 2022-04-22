@@ -24,6 +24,7 @@ export { FixedRadiusCircle } from './basic-elements/fixedRadiusCircle';
 export { Group } from './basic-elements/group';
 export { Line } from './basic-elements/line';
 export { Polyline } from './basic-elements/polyline';
+export { ScalableText } from './basic-elements/scalableText';
 export { SinglePointElement } from './basic-elements/singlePointElement';
 export { Text } from './basic-elements/text';
 export { TwoPointCircle } from './basic-elements/twoPointCircle';
