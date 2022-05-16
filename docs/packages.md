@@ -1,6 +1,9 @@
 # daign-2d-graphics packages
 
-daign-2d-graphics is the main package of several npm packages that work together to build this project.
+The daign-2d-graphics project consists of several libraries that are all written in TypeScript
+and can be downloaded as npm packages.
+
+[List of all my packages on npm.][npm-daign-url]
 
 ### Foundation ###
 
@@ -51,6 +54,8 @@ Simple implementation of observable pattern.
 
 + **[daign-mock-dom][daign-mock-dom-url]** -
 Mocking DOM nodes and events for unit tests in Typescript.
+
+[npm-daign-url]: https://www.npmjs.com/~daign
 
 [daign-math-url]: https://github.com/daign/daign-math
 [daign-2d-pipeline-url]: https://github.com/daign/daign-2d-pipeline
