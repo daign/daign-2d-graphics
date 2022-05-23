@@ -9,6 +9,7 @@
 
 # Coverage
 /.nyc_output
+/coverage
 
 # System Files
 .DS_Store
