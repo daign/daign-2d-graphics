@@ -14,7 +14,8 @@
   "scripts": {
     "build": "rm -rf dist && mkdir dist && tsc",
     "lint": "tslint '{lib,test}/**/*.ts'",
-    "test": "nyc mocha -r ts-node/register test/*.spec.ts test/**/*.spec.ts"
+    "test": "nyc mocha -r ts-node/register test/*.spec.ts test/**/*.spec.ts",
+    "coverage": "nyc --reporter=lcov mocha -r ts-node/register test/*.spec.ts test/**/*.spec.ts"
   },
   "repository": {
     "type": "git",
