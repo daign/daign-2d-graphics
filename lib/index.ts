@@ -9,6 +9,7 @@ export { ButtonObject } from './application/buttonObject';
 export { ControlLayer } from './application/controlLayer';
 export { ControlPoint } from './application/controlPoint';
 export { InteractiveViewport } from './application/interactiveViewport';
+export { SelectionManager } from './application/selectionManager';
 export { Viewport } from './application/viewport';
 
 export { ControlModifierChain } from './control-modifiers/controlModifierChain';

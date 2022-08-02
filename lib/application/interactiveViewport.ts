@@ -49,7 +49,7 @@ export class InteractiveViewport extends Viewport {
 
       // Define action to deactivate element.
       handle.clicked = (): void => {
-        this.application.deactivateElement();
+        this.application.selectionManager.setSelection( null, null );
         this.redrawObservable.notify();
       };
 

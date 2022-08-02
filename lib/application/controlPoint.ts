@@ -16,13 +16,37 @@ export class ControlPoint extends FixedRadiusCircle {
   private targetTransformation: Matrix3;
 
   // The corresponding application.
-  private application: Application;
+  private _application: Application;
+
+  /**
+   * Get the corresponding application.
+   * @returns The application.
+   */
+  public get application(): Application {
+    return this._application;
+  }
 
   // The corresponding control object.
-  private controlObject: ControlObject;
+  private _controlObject: ControlObject;
+
+  /**
+   * Get the corresponding controlObject.
+   * @returns The control object.
+   */
+  public get controlObject(): ControlObject {
+    return this._controlObject;
+  }
 
   // The index of the point in the points array of the control object.
-  private controlIndex: number;
+  private _controlIndex: number;
+
+  /**
+   * Get the index of the point in the points array of the control object.
+   * @returns The index.
+   */
+  public get controlIndex(): number {
+    return this._controlIndex;
+  }
 
   /**
    * Constructor.
@@ -41,9 +65,9 @@ export class ControlPoint extends FixedRadiusCircle {
 
     this.targetPoint = targetPoint;
     this.targetTransformation = targetTransformation;
-    this.application = application;
-    this.controlObject = controlObject;
-    this.controlIndex = controlIndex;
+    this._application = application;
+    this._controlObject = controlObject;
+    this._controlIndex = controlIndex;
 
     this.center = this.targetPoint.clone().transform( this.targetTransformation );
 

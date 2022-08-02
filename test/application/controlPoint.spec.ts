@@ -14,6 +14,54 @@ class TestObject extends ControlObject {
 }
 
 describe( 'ControlPoint', (): void => {
+  describe( 'getter application', (): void => {
+    it( 'should get the application', (): void => {
+      // Arrange
+      const context = new TestContext();
+      const targetPoint = new Vector2( 1, 2 );
+      const targetTransformation = new Matrix3().setTranslation( new Vector2( 2, 3 ) );
+      const application = new Application( context );
+      const controlObject = new TestObject();
+      const controlPoint = new ControlPoint( targetPoint, targetTransformation, application,
+        controlObject, 0 );
+
+      // Act and assert
+      expect( controlPoint.application ).to.equal( application );
+    } );
+  } );
+
+  describe( 'getter controlObject', (): void => {
+    it( 'should get the control object', (): void => {
+      // Arrange
+      const context = new TestContext();
+      const targetPoint = new Vector2( 1, 2 );
+      const targetTransformation = new Matrix3().setTranslation( new Vector2( 2, 3 ) );
+      const application = new Application( context );
+      const controlObject = new TestObject();
+      const controlPoint = new ControlPoint( targetPoint, targetTransformation, application,
+        controlObject, 0 );
+
+      // Act and assert
+      expect( controlPoint.controlObject ).to.equal( controlObject );
+    } );
+  } );
+
+  describe( 'getter controlIndex', (): void => {
+    it( 'should get the control index', (): void => {
+      // Arrange
+      const context = new TestContext();
+      const targetPoint = new Vector2( 1, 2 );
+      const targetTransformation = new Matrix3().setTranslation( new Vector2( 2, 3 ) );
+      const application = new Application( context );
+      const controlObject = new TestObject();
+      const controlPoint = new ControlPoint( targetPoint, targetTransformation, application,
+        controlObject, 2 );
+
+      // Act and assert
+      expect( controlPoint.controlIndex ).to.equal( 2 );
+    } );
+  } );
+
   describe( 'constructor', (): void => {
     it( 'should set the center from the transformed target point', (): void => {
       // Arrange

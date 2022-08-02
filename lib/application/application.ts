@@ -1,15 +1,18 @@
 import { Group } from '../basic-elements/group';
-import { ControlObject } from '../control-objects/controlObject';
 import { ITargetContext } from '../iTargetContext';
 
 import { ControlLayer } from './controlLayer';
 import { InteractiveViewport } from './interactiveViewport';
+import { SelectionManager } from './selectionManager';
 import { Viewport } from './viewport';
 
 /**
  * Application consisting of a drawing layer and a control layer.
  */
 export class Application extends Group {
+  // The selection manager.
+  public selectionManager: SelectionManager;
+
   // The control layer.
   public controlLayer: ControlLayer | null = null;
 
@@ -23,6 +26,8 @@ export class Application extends Group {
    */
   public constructor( context: ITargetContext, interactive: boolean = false ) {
     super();
+
+    this.selectionManager = new SelectionManager();
 
     if ( interactive ) {
       // If interactive then use the InteractiveViewPort and ControlLayer.
@@ -43,26 +48,6 @@ export class Application extends Group {
    */
   public fitToContent( margin?: number ): void {
     this.drawingLayer.fitToContent( margin );
-  }
-
-  /**
-   * Activate a control object.
-   * @param controlObject - The control object to activate.
-   */
-  public activateElement( controlObject: ControlObject ): void {
-    if ( this.controlLayer ) {
-      this.controlLayer.activateElement( controlObject );
-      this.drawingLayer.redrawObservable.notify();
-    }
-  }
-
-  /**
-   * Deactivate the currently activated control object.
-   */
-  public deactivateElement(): void {
-    if ( this.controlLayer ) {
-      this.controlLayer.deactivateElement();
-    }
   }
 
   /**

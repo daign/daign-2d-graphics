@@ -99,7 +99,7 @@ describe( 'InteractiveViewport', (): void => {
       const context = new TestContext();
       context.domNode = domNode;
       const application = new Application( context );
-      const spyDeactivateElement = sinon.spy( application, 'deactivateElement' );
+      const spySetSelection = sinon.spy( application.selectionManager, 'setSelection' );
       // tslint:disable-next-line:no-unused-expression-chai
       new InteractiveViewport( context, application );
 
@@ -112,7 +112,8 @@ describe( 'InteractiveViewport', (): void => {
       global.document.sendEvent( 'mouseup', clickEvent );
 
       // Assert
-      expect( spyDeactivateElement.calledOnce ).to.be.true;
+      expect( spySetSelection.calledOnce ).to.be.true;
+      expect( spySetSelection.calledWith( null, null ) ).to.be.true;
     } );
 
     it( 'should update the viewport scale when scrolling', (): void => {

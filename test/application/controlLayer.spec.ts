@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { spy } from 'sinon';
 
 import { View } from '@daign/2d-pipeline';
 import { Vector2 } from '@daign/math';
@@ -25,34 +26,8 @@ describe( 'ControlLayer', (): void => {
       // Assert
       expect( ( controlLayer as any ).application ).to.equal( application );
     } );
-  } );
 
-  describe( 'activateElement', (): void => {
-    it( 'should set the active element', (): void => {
-      // Arrange
-      const context = new TestContext();
-      const application = new Application( context );
-      const controlLayer = new ControlLayer( application );
-      expect( ( controlLayer as any ).activeElement ).to.be.null;
-
-      const view = new View();
-      view.mountNode( application );
-
-      const targetPoint = new Vector2( 1, 2 );
-      const controlObject = new TestObject();
-      controlObject.points.push( targetPoint );
-      application.drawingLayer.appendChild( controlObject );
-
-      // Act
-      controlLayer.activateElement( controlObject );
-
-      // Assert
-      expect( ( controlLayer as any ).activeElement ).to.be.not.null;
-    } );
-  } );
-
-  describe( 'deactivateElement', (): void => {
-    it( 'should set the active element to null', (): void => {
+    it( 'should call createControls when there are changes in the selection manager', (): void => {
       // Arrange
       const context = new TestContext();
       const application = new Application( context );
@@ -65,15 +40,13 @@ describe( 'ControlLayer', (): void => {
       const controlObject = new TestObject();
       controlObject.points.push( targetPoint );
       application.drawingLayer.appendChild( controlObject );
-
-      controlLayer.activateElement( controlObject );
-      expect( ( controlLayer as any ).activeElement ).to.be.not.null;
+      const spyCreateControls = spy( controlLayer, 'createControls' );
 
       // Act
-      controlLayer.deactivateElement();
+      application.selectionManager.setSelection( controlObject, null );
 
       // Assert
-      expect( ( controlLayer as any ).activeElement ).to.be.null;
+      expect( spyCreateControls.calledOnce ).to.be.true;
     } );
   } );
 
@@ -92,12 +65,11 @@ describe( 'ControlLayer', (): void => {
       controlObject.points.push( targetPoint );
       application.drawingLayer.appendChild( controlObject );
 
-      controlLayer.activateElement( controlObject );
+      application.selectionManager.setSelection( controlObject, null );
       expect( controlLayer.children.length ).to.be.greaterThan( 0 );
-      ( controlLayer as any ).activeElement = null;
 
       // Act
-      controlLayer.createControls();
+      application.selectionManager.setSelection( null, null );
 
       // Assert
       expect( controlLayer.children.length ).to.equal( 0 );
@@ -118,10 +90,8 @@ describe( 'ControlLayer', (): void => {
       controlObject.points.push( new Vector2( 3, 4 ) );
       application.drawingLayer.appendChild( controlObject );
 
-      ( controlLayer as any ).activeElement = controlObject;
-
       // Act
-      controlLayer.createControls();
+      application.selectionManager.setSelection( controlObject, null );
 
       // Assert
       expect( controlLayer.children.length ).to.equal( 3 );
@@ -141,10 +111,8 @@ describe( 'ControlLayer', (): void => {
       controlObject.buttons.push( new ButtonObject( buttonCallback ) );
       application.drawingLayer.appendChild( controlObject );
 
-      ( controlLayer as any ).activeElement = controlObject;
-
       // Act
-      controlLayer.createControls();
+      application.selectionManager.setSelection( controlObject, null );
 
       // Assert
       expect( controlLayer.children.length ).to.equal( 1 );
