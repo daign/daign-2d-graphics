@@ -1,10 +1,17 @@
 import { expect } from 'chai';
 import { spy } from 'sinon';
 
+import { Vector2 } from '@daign/math';
 import { View } from '@daign/2d-pipeline';
 
-import { Application } from '../../lib';
+import { Application, ControlObject } from '../../lib';
 import { TestContext } from '../testContext';
+
+class TestObject extends ControlObject {
+  public constructor() {
+    super();
+  }
+}
 
 describe( 'Application', (): void => {
   describe( 'constructor', (): void => {
@@ -29,6 +36,27 @@ describe( 'Application', (): void => {
 
       // Assert
       expect( application.children.length ).to.equal( 2 );
+    } );
+
+    it( 'should call createControls when there are changes in the selection manager', (): void => {
+      // Arrange
+      const context = new TestContext();
+      const application = new Application( context, true );
+
+      const view = new View();
+      view.mountNode( application );
+
+      const targetPoint = new Vector2( 1, 2 );
+      const controlObject = new TestObject();
+      controlObject.points.push( targetPoint );
+      application.drawingLayer.appendChild( controlObject );
+      const spyCreateControls = spy( application.controlLayer!, 'createControls' );
+
+      // Act
+      application.selectionManager.setSelection( controlObject, null );
+
+      // Assert
+      expect( spyCreateControls.calledOnce ).to.be.true;
     } );
   } );
 

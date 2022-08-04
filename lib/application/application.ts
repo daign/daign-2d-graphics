@@ -35,6 +35,12 @@ export class Application extends Group {
       this.appendChild( this.drawingLayer );
       this.controlLayer = new ControlLayer( this );
       this.appendChild( this.controlLayer );
+
+      // Build controls when selection changes.
+      this.selectionManager.subscribeToChanges( (): void => {
+        this.createControls();
+        this.drawingLayer.redrawObservable.notify();
+      } );
     } else {
       // If not interactive then use the normal Viewport and no ControlLayer.
       this.drawingLayer = new Viewport( context, this );

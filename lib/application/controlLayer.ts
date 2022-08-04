@@ -23,10 +23,6 @@ export class ControlLayer extends Group {
 
     this.application = application;
     this.baseClass = 'control-layer';
-
-    this.application.selectionManager.subscribeToChanges( (): void => {
-      this.createControls();
-    } );
   }
 
   /**
@@ -36,6 +32,8 @@ export class ControlLayer extends Group {
     this.clearChildren();
 
     const activeObject = this.application.selectionManager.activeObject;
+    const activePointIndex = this.application.selectionManager.activePointIndex;
+
     if ( !activeObject ) {
       return;
     }
@@ -47,6 +45,10 @@ export class ControlLayer extends Group {
       const controlPoint = new ControlPoint( point, transformation, this.application, activeObject,
         index );
       this.appendChild( controlPoint );
+
+      if ( index === activePointIndex ) {
+        controlPoint.addClass( 'active' );
+      }
     } );
 
     activeObject.buttons.forEach( ( button: ButtonObject ): void => {

@@ -1,8 +1,7 @@
 import { expect } from 'chai';
-import { spy } from 'sinon';
 
 import { View } from '@daign/2d-pipeline';
-import { Vector2 } from '@daign/math';
+import { StringValue, Vector2 } from '@daign/math';
 
 import { Application, ButtonObject, ControlLayer, ControlObject } from '../../lib';
 import { TestContext } from '../testContext';
@@ -26,28 +25,6 @@ describe( 'ControlLayer', (): void => {
       // Assert
       expect( ( controlLayer as any ).application ).to.equal( application );
     } );
-
-    it( 'should call createControls when there are changes in the selection manager', (): void => {
-      // Arrange
-      const context = new TestContext();
-      const application = new Application( context );
-      const controlLayer = new ControlLayer( application );
-
-      const view = new View();
-      view.mountNode( application );
-
-      const targetPoint = new Vector2( 1, 2 );
-      const controlObject = new TestObject();
-      controlObject.points.push( targetPoint );
-      application.drawingLayer.appendChild( controlObject );
-      const spyCreateControls = spy( controlLayer, 'createControls' );
-
-      // Act
-      application.selectionManager.setSelection( controlObject, null );
-
-      // Assert
-      expect( spyCreateControls.calledOnce ).to.be.true;
-    } );
   } );
 
   describe( 'createControls', (): void => {
@@ -66,10 +43,12 @@ describe( 'ControlLayer', (): void => {
       application.drawingLayer.appendChild( controlObject );
 
       application.selectionManager.setSelection( controlObject, null );
+      controlLayer.createControls();
       expect( controlLayer.children.length ).to.be.greaterThan( 0 );
 
       // Act
       application.selectionManager.setSelection( null, null );
+      controlLayer.createControls();
 
       // Assert
       expect( controlLayer.children.length ).to.equal( 0 );
@@ -92,9 +71,48 @@ describe( 'ControlLayer', (): void => {
 
       // Act
       application.selectionManager.setSelection( controlObject, null );
+      controlLayer.createControls();
 
       // Assert
       expect( controlLayer.children.length ).to.equal( 3 );
+    } );
+
+    it( 'should add the active class when a point is selected', (): void => {
+      // Arrange
+      const context = new TestContext();
+      const application = new Application( context );
+      const controlLayer = new ControlLayer( application );
+
+      const view = new View();
+      view.mountNode( application );
+
+      const controlObject = new TestObject();
+      controlObject.points.push( new Vector2( 1, 2 ) );
+      controlObject.points.push( new Vector2( 2, 3 ) );
+      controlObject.points.push( new Vector2( 3, 4 ) );
+      application.drawingLayer.appendChild( controlObject );
+
+      // Act
+      application.selectionManager.setSelection( controlObject, 1 );
+      controlLayer.createControls();
+
+      // Assert
+      expect( controlLayer.children.length ).to.equal( 3 );
+      expect( ( controlLayer.children[ 0 ] as any ).classNames.elements
+        .some( ( x: StringValue ): boolean => {
+          return x.value === 'active';
+        } )
+      ).to.be.false;
+      expect( ( controlLayer.children[ 1 ] as any ).classNames.elements
+        .some( ( x: StringValue ): boolean => {
+          return x.value === 'active';
+        } )
+      ).to.be.true;
+      expect( ( controlLayer.children[ 2 ] as any ).classNames.elements
+        .some( ( x: StringValue ): boolean => {
+          return x.value === 'active';
+        } )
+      ).to.be.false;
     } );
 
     it( 'should create a child for every button in the control object', (): void => {
@@ -113,6 +131,7 @@ describe( 'ControlLayer', (): void => {
 
       // Act
       application.selectionManager.setSelection( controlObject, null );
+      controlLayer.createControls();
 
       // Assert
       expect( controlLayer.children.length ).to.equal( 1 );
