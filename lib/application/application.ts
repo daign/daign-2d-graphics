@@ -13,11 +13,12 @@ export class Application extends Group {
   // The selection manager.
   public selectionManager: SelectionManager;
 
-  // The control layer.
-  public controlLayer: ControlLayer | null = null;
-
   // The drawing layer and interactive viewport.
   public drawingLayer: Viewport;
+
+  /* The control layer. It lies above the drawing layer and is not affected by zooming and panning
+   * of the viewport. So its coordinates are always in screen coordinates. */
+  public controlLayer: ControlLayer | null = null;
 
   /**
    * Constructor.

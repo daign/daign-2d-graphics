@@ -1,6 +1,8 @@
 import { Vector2, Matrix3 } from '@daign/math';
+import { MatrixTransform } from '@daign/2d-pipeline';
 
-import { FixedRadiusCircle } from '../basic-elements/fixedRadiusCircle';
+import { StyledGraphicNode } from '../styledGraphicNode';
+import { FixedRadiusCircle, Group } from '../basic-elements';
 import { ControlObject } from '../control-objects/controlObject';
 
 import { Application } from './application';
@@ -8,7 +10,10 @@ import { Application } from './application';
 /**
  * Interactive control point for control objects.
  */
-export class ControlPoint extends FixedRadiusCircle {
+export class ControlPoint extends Group {
+  // The offset position that is applied to all elements of the control point.
+  private offset: MatrixTransform = new MatrixTransform();
+
   // The point coordinates to display and modify.
   private targetPoint: Vector2;
 
@@ -49,19 +54,38 @@ export class ControlPoint extends FixedRadiusCircle {
   }
 
   /**
+   * Getter for the center position.
+   */
+  public get center(): Vector2 {
+    return this.points.getByName( 'center' );
+  }
+
+  /**
+   * Setter for the center position.
+   */
+  public set center( position: Vector2 ) {
+    this.points.getByName( 'center' ).copy( position );
+    this.calculateOffset();
+  }
+
+  /**
    * Constructor.
    * @param targetPoint - The point coordinates to display and modify.
    * @param targetTransformation - The transformation matrix of the control object.
    * @param application - The corresponding application.
    * @param controlObject - The corresponding control object.
    * @param controlIndex - The index of the point in the points array of the control object.
+   * @param controlShape - The shape to display for a control point. Optional.
    */
   public constructor(
     targetPoint: Vector2, targetTransformation: Matrix3, application: Application,
-    controlObject: ControlObject, controlIndex: number
+    controlObject: ControlObject, controlIndex: number, controlShape?: StyledGraphicNode | null
   ) {
     super();
-    this.radius = 15;
+
+    this.baseClass = 'controlPoint';
+    this.points.initializeElements( 1 );
+    this.points.assignName( 'center', 0 );
 
     this.targetPoint = targetPoint;
     this.targetTransformation = targetTransformation;
@@ -71,7 +95,23 @@ export class ControlPoint extends FixedRadiusCircle {
 
     this.center = this.targetPoint.clone().transform( this.targetTransformation );
 
-    this.baseClass = 'controlPoint';
+    if ( controlShape ) {
+      this.appendChild( controlShape );
+    } else if ( controlShape === undefined ) {
+      // The default shape to display for a control point.
+      // Center is (0,0) because the whole group is shifted into position.
+      const defaultShape = new FixedRadiusCircle();
+      defaultShape.radius = 15;
+      this.appendChild( defaultShape );
+    }
+    // Else if controlShape is null then don't add a shape.
+  }
+
+  /**
+   * Calculate the offset transformation resulting from the center point position.
+   */
+  private calculateOffset(): void {
+    this.offset.matrix.setTranslation( this.center );
   }
 
   /**
@@ -109,6 +149,8 @@ export class ControlPoint extends FixedRadiusCircle {
     this.controlObject.points.iterate( ( element: Vector2, index: number ): void => {
       element.copy( updatedPoints[ index ] );
     } );
+
+    this.calculateOffset();
 
     this.application.createControls();
     this.application.drawingLayer.redrawObservable.notify();

@@ -1,3 +1,4 @@
+import { StyledGraphicNode } from '../styledGraphicNode';
 import { ButtonObject } from '../application';
 import { Group } from '../basic-elements';
 import { IControlModifier } from '../control-modifiers';
@@ -11,6 +12,9 @@ export abstract class ControlObject extends Group {
 
   // Array of button objects.
   public buttons: ButtonObject[] = [];
+
+  // Array of custom shapes to be used for control points.
+  public controlShapes: ( StyledGraphicNode | null )[] = [];
 
   /**
    * Constructor.

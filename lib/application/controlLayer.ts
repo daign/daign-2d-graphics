@@ -43,7 +43,7 @@ export class ControlLayer extends Group {
 
     activeObject.points.iterate( ( point: Vector2, index: number ): void => {
       const controlPoint = new ControlPoint( point, transformation, this.application, activeObject,
-        index );
+        index, activeObject.controlShapes[ index ] );
       this.appendChild( controlPoint );
 
       if ( index === activePointIndex ) {

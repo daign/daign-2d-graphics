@@ -3,7 +3,8 @@ import { expect } from 'chai';
 import { Matrix3, Vector2 } from '@daign/math';
 import { View } from '@daign/2d-pipeline';
 
-import { Application, ControlObject, ControlPoint, RoundingModifier } from '../../lib';
+import { Application, ControlObject, ControlPoint, FixedRadiusCircle, RoundingModifier,
+  TwoPointRectangle } from '../../lib';
 import { TestContext } from '../testContext';
 
 class TestObject extends ControlObject {
@@ -62,7 +63,61 @@ describe( 'ControlPoint', (): void => {
     } );
   } );
 
+  describe( 'getter and setter center', (): void => {
+    it( 'should set and get the center position', (): void => {
+      // Arrange
+      const context = new TestContext();
+      const targetPoint = new Vector2( 1, 2 );
+      const targetTransformation = new Matrix3().setTranslation( new Vector2( 2, 3 ) );
+      const application = new Application( context );
+      const controlObject = new TestObject();
+      const controlPoint = new ControlPoint( targetPoint, targetTransformation, application,
+        controlObject, 2 );
+
+      // Act and assert
+      const vector = new Vector2( 1, 1 );
+      controlPoint.center = vector;
+      expect( controlPoint.center.equals( vector ) ).to.be.true;
+    } );
+
+    it( 'should update the offset transformation', (): void => {
+      // Arrange
+      const context = new TestContext();
+      const targetPoint = new Vector2( 1, 2 );
+      const targetTransformation = new Matrix3().setTranslation( new Vector2( 2, 3 ) );
+      const application = new Application( context );
+      const controlObject = new TestObject();
+      const controlPoint = new ControlPoint( targetPoint, targetTransformation, application,
+        controlObject, 2 );
+
+      // Act
+      const vector = new Vector2( 1, 1 );
+      controlPoint.center = vector;
+
+      // Assert
+      const expected = new Matrix3().setTranslation( vector );
+      expect( ( controlPoint as any ).offset.matrix.equals( expected ) ).to.be.true;
+    } );
+  } );
+
   describe( 'constructor', (): void => {
+    it( 'should initialize with one point', (): void => {
+      // Arrange
+      const context = new TestContext();
+      const targetPoint = new Vector2( 1, 2 );
+      const targetTransformation = new Matrix3().setTranslation( new Vector2( 2, 3 ) );
+      const application = new Application( context );
+      const controlObject = new TestObject();
+
+      // Act
+      const controlPoint = new ControlPoint( targetPoint, targetTransformation, application,
+        controlObject, 2 );
+
+      // Assert
+      expect( controlPoint.points.length ).to.equal( 1 );
+      expect( controlPoint.points.containsName( 'center' ) ).to.be.true;
+    } );
+
     it( 'should set the center from the transformed target point', (): void => {
       // Arrange
       const context = new TestContext();
@@ -77,6 +132,60 @@ describe( 'ControlPoint', (): void => {
 
       // Assert
       expect( controlPoint.center.equals( new Vector2( 3, 5 ) ) ).to.be.true;
+    } );
+
+    it( 'should append the given control shape', (): void => {
+      // Arrange
+      const context = new TestContext();
+      const targetPoint = new Vector2( 1, 2 );
+      const targetTransformation = new Matrix3().setTranslation( new Vector2( 2, 3 ) );
+      const application = new Application( context );
+      const controlObject = new TestObject();
+
+      const controlShape = new TwoPointRectangle();
+
+      // Act
+      const controlPoint = new ControlPoint( targetPoint, targetTransformation, application,
+        controlObject, 0, controlShape );
+
+      // Assert
+      expect( controlPoint.children.length ).to.equal( 1 );
+      expect( controlPoint.children[ 0 ] instanceof TwoPointRectangle ).to.be.true;
+      expect( controlPoint.children[ 0 ] ).to.equal( controlShape );
+    } );
+
+    it( 'should append a default shape when no control shape is passed', (): void => {
+      // Arrange
+      const context = new TestContext();
+      const targetPoint = new Vector2( 1, 2 );
+      const targetTransformation = new Matrix3().setTranslation( new Vector2( 2, 3 ) );
+      const application = new Application( context );
+      const controlObject = new TestObject();
+
+      // Act
+      const controlPoint = new ControlPoint( targetPoint, targetTransformation, application,
+        controlObject, 0 );
+
+      // Assert
+      expect( controlPoint.children.length ).to.equal( 1 );
+      expect( controlPoint.children[ 0 ] instanceof FixedRadiusCircle ).to.be.true;
+      expect( ( controlPoint.children[ 0 ] as FixedRadiusCircle ).radius ).to.equal( 15 );
+    } );
+
+    it( 'should not append a shape when null is passed as control shape', (): void => {
+      // Arrange
+      const context = new TestContext();
+      const targetPoint = new Vector2( 1, 2 );
+      const targetTransformation = new Matrix3().setTranslation( new Vector2( 2, 3 ) );
+      const application = new Application( context );
+      const controlObject = new TestObject();
+
+      // Act
+      const controlPoint = new ControlPoint( targetPoint, targetTransformation, application,
+        controlObject, 0, null );
+
+      // Assert
+      expect( controlPoint.children.length ).to.equal( 0 );
     } );
   } );
 

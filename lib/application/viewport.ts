@@ -20,6 +20,8 @@ class ObservableObject extends Observable {
 /**
  * Group that acts as an viewport by applying a transformation to bring objects into the visible
  * area.
+ * So this is just the top most node of the drawing layer. But the transformation it has is used
+ * for zooming and panning the content around.
  */
 export class Viewport extends Group {
   // The target drawing context.
