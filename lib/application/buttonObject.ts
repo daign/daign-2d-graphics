@@ -1,4 +1,5 @@
-import { SinglePointElement } from '../basic-elements/singlePointElement';
+import { StyledGraphicNode } from '../styledGraphicNode';
+import { SinglePointElement } from '../basic-elements';
 
 /**
  * Class for a button object at an anchor position.
@@ -6,6 +7,9 @@ import { SinglePointElement } from '../basic-elements/singlePointElement';
 export class ButtonObject extends SinglePointElement {
   // The callback for the button's action.
   public callback: () => void;
+
+  // Button shape to display.
+  public buttonShape: StyledGraphicNode | undefined;
 
   /**
    * Constructor.

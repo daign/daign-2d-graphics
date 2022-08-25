@@ -3,12 +3,13 @@ import * as sinon from 'sinon';
 
 import { Matrix3, Vector2 } from '@daign/math';
 
-import { Application, ButtonControl, ButtonObject } from '../../lib';
+import { Application, ButtonControl, ButtonObject, FixedRadiusCircle,
+  TwoPointRectangle } from '../../lib';
 import { TestContext } from '../testContext';
 
 describe( 'ButtonControl', (): void => {
   describe( 'constructor', (): void => {
-    it( 'should set the center from the transformed button object anchor', (): void => {
+    it( 'should set the transformation from the transformed button object anchor', (): void => {
       // Arrange
       const anchorPoint = new Vector2( 1, 2 );
       const callback = (): void => {};
@@ -23,7 +24,51 @@ describe( 'ButtonControl', (): void => {
       const buttonControl = new ButtonControl( buttonObject, targetTransformation, application );
 
       // Assert
-      expect( buttonControl.center.equals( new Vector2( 3, 5 ) ) ).to.be.true;
+      const expected = new Matrix3().setTranslation( new Vector2( 3, 5 ) );
+      const transformation = buttonControl.transformation.transformMatrix;
+      expect( transformation.equals( expected ) ).to.be.true;
+    } );
+
+    it( 'should add the contained button shape', (): void => {
+      // Arrange
+      const anchorPoint = new Vector2( 1, 2 );
+      const buttonShape = new TwoPointRectangle();
+      const callback = (): void => {};
+      const buttonObject = new ButtonObject( callback );
+      buttonObject.anchor = anchorPoint;
+      buttonObject.buttonShape = buttonShape;
+
+      const targetTransformation = new Matrix3().setIdentity();
+      const context = new TestContext();
+      const application = new Application( context );
+
+      // Act
+      const buttonControl = new ButtonControl( buttonObject, targetTransformation, application );
+
+      // Assert
+      expect( buttonControl.children.length ).to.equal( 1 );
+      expect( buttonControl.children[ 0 ] instanceof TwoPointRectangle ).to.be.true;
+      expect( buttonControl.children[ 0 ] ).to.equal( buttonShape );
+    } );
+
+    it( 'should add a default shape when no button shape is defined', (): void => {
+      // Arrange
+      const anchorPoint = new Vector2( 1, 2 );
+      const callback = (): void => {};
+      const buttonObject = new ButtonObject( callback );
+      buttonObject.anchor = anchorPoint;
+
+      const targetTransformation = new Matrix3().setIdentity();
+      const context = new TestContext();
+      const application = new Application( context );
+
+      // Act
+      const buttonControl = new ButtonControl( buttonObject, targetTransformation, application );
+
+      // Assert
+      expect( buttonControl.children.length ).to.equal( 1 );
+      expect( buttonControl.children[ 0 ] instanceof FixedRadiusCircle ).to.be.true;
+      expect( ( buttonControl.children[ 0 ] as FixedRadiusCircle ).radius ).to.equal( 15 );
     } );
   } );
 

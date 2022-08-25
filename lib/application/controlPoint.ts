@@ -94,6 +94,7 @@ export class ControlPoint extends Group {
     this._controlIndex = controlIndex;
 
     this.center = this.targetPoint.clone().transform( this.targetTransformation );
+    this.transformation.push( this.offset );
 
     if ( controlShape ) {
       this.appendChild( controlShape );
