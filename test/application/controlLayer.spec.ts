@@ -87,13 +87,14 @@ describe( 'ControlLayer', (): void => {
       view.mountNode( application );
 
       const controlObject = new TestObject();
+      const activePoint = new Vector2( 2, 3 );
       controlObject.points.push( new Vector2( 1, 2 ) );
-      controlObject.points.push( new Vector2( 2, 3 ) );
+      controlObject.points.push( activePoint );
       controlObject.points.push( new Vector2( 3, 4 ) );
       application.drawingLayer.appendChild( controlObject );
 
       // Act
-      application.selectionManager.setSelection( controlObject, 1 );
+      application.selectionManager.setSelection( controlObject, activePoint );
       controlLayer.createControls();
 
       // Assert

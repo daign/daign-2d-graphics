@@ -1,4 +1,5 @@
 import { Observable } from '@daign/observable';
+import { Vector2 } from '@daign/math';
 
 import { ControlObject } from '../control-objects/controlObject';
 
@@ -9,8 +10,8 @@ export class SelectionManager extends Observable {
   // The currently active control object or null.
   public activeObject: ControlObject | null = null;
 
-  // The index of the currently active control point or null.
-  public activePointIndex: number | null = null;
+  // The currently active control point vector or null.
+  public activePoint: Vector2 | null = null;
 
   /**
    * Constructor.
@@ -22,29 +23,29 @@ export class SelectionManager extends Observable {
   /**
    * Set the current selection.
    * @param activeObject - The currently active control object or null.
-   * @param activePointIndex - The index of the currently active control point or null.
+   * @param activePoint - The currently active control point vector or null.
    */
   public setSelection(
     activeObject: ControlObject | null,
-    activePointIndex: number | null
+    activePoint: Vector2 | null
   ): void {
-    // Setting a point index without an object is not a valid option.
-    if ( activeObject === null && activePointIndex !== null ) {
+    // Setting a point without an object is not a valid option.
+    if ( activeObject === null && activePoint !== null ) {
       return;
     }
 
-    /* When setting an object and a point index, the point index must be within the bounds of the
-     * object's point elements. Otherwise not a valid option. */
-    if ( activeObject !== null && activePointIndex !== null ) {
-      const numberOfPoints = activeObject.points.length;
-      if ( numberOfPoints <= activePointIndex ) {
+    /* When setting an object and a point, the point must be part of the object's point elements.
+     * Otherwise not a valid option. */
+    if ( activeObject !== null && activePoint !== null ) {
+      const points = activeObject.points.elements;
+      if ( points.indexOf( activePoint ) === -1 ) {
         return;
       }
     }
 
-    if ( this.activeObject !== activeObject || this.activePointIndex !== activePointIndex ) {
+    if ( this.activeObject !== activeObject || this.activePoint !== activePoint ) {
       this.activeObject = activeObject;
-      this.activePointIndex = activePointIndex;
+      this.activePoint = activePoint;
       this.notifyObservers();
     }
   }

@@ -32,7 +32,7 @@ export class ControlLayer extends Group {
     this.clearChildren();
 
     const activeObject = this.application.selectionManager.activeObject;
-    const activePointIndex = this.application.selectionManager.activePointIndex;
+    const activePoint = this.application.selectionManager.activePoint;
 
     if ( !activeObject ) {
       return;
@@ -46,7 +46,7 @@ export class ControlLayer extends Group {
         index, activeObject.controlShapes[ index ] );
       this.appendChild( controlPoint );
 
-      if ( index === activePointIndex ) {
+      if ( point === activePoint ) {
         controlPoint.addClass( 'active' );
       }
     } );
