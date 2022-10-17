@@ -14,45 +14,6 @@ export class ControlPoint extends Group {
   // The offset position that is applied to all elements of the control point.
   private offset: MatrixTransform = new MatrixTransform();
 
-  // The point coordinates to display and modify.
-  private targetPoint: Vector2;
-
-  // The transformation matrix of the control object.
-  private targetTransformation: Matrix3;
-
-  // The corresponding application.
-  private _application: Application;
-
-  /**
-   * Get the corresponding application.
-   * @returns The application.
-   */
-  public get application(): Application {
-    return this._application;
-  }
-
-  // The corresponding control object.
-  private _controlObject: ControlObject;
-
-  /**
-   * Get the corresponding controlObject.
-   * @returns The control object.
-   */
-  public get controlObject(): ControlObject {
-    return this._controlObject;
-  }
-
-  // The index of the point in the points array of the control object.
-  private _controlIndex: number;
-
-  /**
-   * Get the index of the point in the points array of the control object.
-   * @returns The index.
-   */
-  public get controlIndex(): number {
-    return this._controlIndex;
-  }
-
   /**
    * Getter for the center position.
    */
@@ -78,20 +39,18 @@ export class ControlPoint extends Group {
    * @param controlShape - The shape to display for a control point. Optional.
    */
   public constructor(
-    targetPoint: Vector2, targetTransformation: Matrix3, application: Application,
-    controlObject: ControlObject, controlIndex: number, controlShape?: StyledGraphicNode | null
+    public readonly targetPoint: Vector2,
+    private readonly targetTransformation: Matrix3,
+    public readonly application: Application,
+    public readonly controlObject: ControlObject,
+    private controlIndex: number,
+    controlShape?: StyledGraphicNode | null
   ) {
     super();
 
     this.baseClass = 'controlPoint';
     this.points.initializeElements( 1 );
     this.points.assignName( 'center', 0 );
-
-    this.targetPoint = targetPoint;
-    this.targetTransformation = targetTransformation;
-    this._application = application;
-    this._controlObject = controlObject;
-    this._controlIndex = controlIndex;
 
     this.center = this.targetPoint.clone().transform( this.targetTransformation );
     this.transformation.push( this.offset );
