@@ -1,7 +1,7 @@
 import { Observable } from '@daign/observable';
 import { Vector2 } from '@daign/math';
 
-import { ControlObject } from '../control-objects/controlObject';
+import { ControlObject } from '../control-elements';
 
 /**
  * Class that manages the current selected control object and control point.

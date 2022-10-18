@@ -1,11 +1,11 @@
 import { Vector2, Matrix3 } from '@daign/math';
 import { MatrixTransform } from '@daign/2d-pipeline';
 
-import { StyledGraphicNode } from '../styledGraphicNode';
+import { Application } from '../application';
 import { FixedRadiusCircle, Group } from '../basic-elements';
-import { ControlObject } from '../control-objects/controlObject';
+import { StyledGraphicNode } from '../styledGraphicNode';
 
-import { Application } from './application';
+import { ControlObject } from './controlObject';
 
 /**
  * Interactive control point for control objects.

@@ -1,10 +1,10 @@
 import { Matrix3 } from '@daign/math';
 import { MatrixTransform } from '@daign/2d-pipeline';
 
-import { ButtonObject } from './buttonObject';
-import { Application } from './application';
-
+import { Application } from '../application';
 import { FixedRadiusCircle, Group } from '../basic-elements';
+
+import { ButtonObject } from './buttonObject';
 
 /**
  * Interactive button control which displays a button object.

@@ -1,6 +1,6 @@
 import { Vector2 } from '@daign/math';
 
-import { ControlObject } from '../control-objects';
+import { ControlObject } from '../control-elements';
 
 /**
  * Interface for modifiers that restrict or modify the outcome of drawing actions.

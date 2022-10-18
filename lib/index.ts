@@ -4,10 +4,7 @@ export { StyledGraphicNode } from './styledGraphicNode';
 
 export { Application } from './application/application';
 export { ApplicationView } from './application/applicationView';
-export { ButtonControl } from './application/buttonControl';
-export { ButtonObject } from './application/buttonObject';
 export { ControlLayer } from './application/controlLayer';
-export { ControlPoint } from './application/controlPoint';
 export { InteractiveViewport } from './application/interactiveViewport';
 export { SelectionManager } from './application/selectionManager';
 export { Viewport } from './application/viewport';
@@ -19,7 +16,11 @@ export { OrthogonalModifier } from './control-modifiers/orthogonalModifier';
 export { RoundFollowingModifier } from './control-modifiers/roundFollowingModifier';
 export { RoundingModifier } from './control-modifiers/roundingModifier';
 
-export { ControlObject } from './control-objects/controlObject';
+export { ButtonControl } from './control-elements/buttonControl';
+export { ButtonObject } from './control-elements/buttonObject';
+export { ControlObject } from './control-elements/controlObject';
+export { ControlPoint } from './control-elements/controlPoint';
+export { IControlGuide } from './control-elements/iControlGuide';
 
 export { FixedRadiusCircle } from './basic-elements/fixedRadiusCircle';
 export { Group } from './basic-elements/group';

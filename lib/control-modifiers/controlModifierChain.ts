@@ -1,6 +1,6 @@
 import { Vector2 } from '@daign/math';
 
-import { ControlObject } from '../control-objects';
+import { ControlObject } from '../control-elements';
 
 import { IControlModifier } from './iControlModifier';
 
