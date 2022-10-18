@@ -21,6 +21,7 @@ export { ButtonObject } from './control-elements/buttonObject';
 export { ControlObject } from './control-elements/controlObject';
 export { ControlPoint } from './control-elements/controlPoint';
 export { IControlGuide } from './control-elements/iControlGuide';
+export { SelectionFrame } from './control-elements/selectionFrame';
 
 export { FixedRadiusCircle } from './basic-elements/fixedRadiusCircle';
 export { Group } from './basic-elements/group';

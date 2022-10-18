@@ -6,6 +6,8 @@ import { ControlObject } from './controlObject';
 
 /**
  * Interface for the implementation of control guides.
+ * Control guides are anything that should be rendered on the control layer but are not control
+ * points or buttons.
  */
 export interface IControlGuide {
   /**
