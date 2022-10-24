@@ -21,6 +21,12 @@ class TestControlGuide implements IControlGuide {
   }
 }
 
+class NullControlGuide implements IControlGuide {
+  public redraw(): null {
+    return null;
+  }
+}
+
 describe( 'ControlObject', (): void => {
   describe( 'constructor', (): void => {
     it( 'should call redraw method when points array changes', (): void => {
@@ -149,6 +155,26 @@ describe( 'ControlObject', (): void => {
 
       // Assert
       expect( node.children.length ).to.equal( 2 );
+    } );
+
+    it( 'should not add a child when the control guide returns null', (): void => {
+      // Arrange
+      const context = new TestContext();
+      const application = new Application( context );
+
+      const view = new View();
+      view.mountNode( application );
+
+      const controlObject = new TestObject();
+
+      controlObject.controlGuides.push( new NullControlGuide() );
+      application.drawingLayer.appendChild( controlObject );
+
+      // Act
+      const node = controlObject.redrawControlObjects( null, application );
+
+      // Assert
+      expect( node.children.length ).to.equal( 0 );
     } );
   } );
 } );

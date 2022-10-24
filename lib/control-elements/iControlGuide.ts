@@ -14,9 +14,10 @@ export interface IControlGuide {
    * Create the shapes that make up the control guide.
    * @param activeObject - The currently active control object.
    * @param activePoint - The currently active control point vector or null.
+   * @returns The constructed node or null.
    */
   redraw(
     activeObject: ControlObject,
     activePoint: Vector2 | null
-  ): StyledGraphicNode;
+  ): StyledGraphicNode | null;
 }

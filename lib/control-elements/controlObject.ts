@@ -67,7 +67,9 @@ export abstract class ControlObject extends Group {
     // Add the control guide objects.
     this.controlGuides.forEach( ( controlGuide: IControlGuide ): void => {
       const node = controlGuide.redraw( this, activePoint );
-      group.appendChild( node );
+      if ( node ) {
+        group.appendChild( node );
+      }
     } );
 
     // Add the control points.

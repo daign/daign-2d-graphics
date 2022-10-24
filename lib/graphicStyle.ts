@@ -24,6 +24,7 @@ export class GraphicStyle implements IStyleDeclaration {
   public display: string | null = null;
   public visibility: string | null = null;
   public opacity: number | null = null;
+  public paintOrder: string | null = null;
 
   // Text.
   public fontFamily: string | null = null;
@@ -60,6 +61,7 @@ export class GraphicStyle implements IStyleDeclaration {
       this.display === null &&
       this.visibility === null &&
       this.opacity === null &&
+      this.paintOrder === null &&
       this.fontFamily === null &&
       this.fontSize === null &&
       this.fontStyle === null &&
@@ -91,6 +93,7 @@ export class GraphicStyle implements IStyleDeclaration {
    * @param display - Optional.
    * @param visibility - Optional.
    * @param opacity - Optional.
+   * @param paintOrder - Optional.
    * @param fontFamily - Optional.
    * @param fontSize - Optional.
    * @param fontStyle - Optional.
@@ -119,6 +122,7 @@ export class GraphicStyle implements IStyleDeclaration {
     display?: string,
     visibility?: string,
     opacity?: number,
+    paintOrder?: string,
     fontFamily?: string,
     fontSize?: string,
     fontStyle?: string,
@@ -175,6 +179,9 @@ export class GraphicStyle implements IStyleDeclaration {
     }
     if ( opacity ) {
       this.opacity = opacity;
+    }
+    if ( paintOrder ) {
+      this.paintOrder = paintOrder;
     }
     if ( fontFamily ) {
       this.fontFamily = fontFamily;
@@ -247,6 +254,8 @@ export class GraphicStyle implements IStyleDeclaration {
       this.visibility = value;
     } else if ( name === 'opacity' ) {
       this.opacity = parseFloat( value );
+    } else if ( name === 'paint-order' ) {
+      this.paintOrder = value;
     } else if ( name === 'font-family' ) {
       this.fontFamily = value;
     } else if ( name === 'font-size' ) {
@@ -321,6 +330,9 @@ export class GraphicStyle implements IStyleDeclaration {
     }
     if ( this.opacity === null ) {
       this.opacity = declaration.opacity;
+    }
+    if ( this.paintOrder === null ) {
+      this.paintOrder = declaration.paintOrder;
     }
     if ( this.fontFamily === null ) {
       this.fontFamily = declaration.fontFamily;

@@ -2,6 +2,7 @@ export { FixedRadiusCircle } from './fixedRadiusCircle';
 export { Group } from './group';
 export { Line } from './line';
 export { Polyline } from './polyline';
+export { QuadraticCurve } from './quadraticCurve';
 export { ScalableText } from './scalableText';
 export { SinglePointElement } from './singlePointElement';
 export { Text } from './text';

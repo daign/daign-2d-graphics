@@ -31,8 +31,9 @@ describe( 'GraphicStyle', (): void => {
     it( 'should set the properties', (): void => {
       // Act
       const style = new GraphicStyle( 'black', 0.9, 'evenodd', 'blue', 2, 0.8, 'square', 'bevel', 4,
-        '1,2,3', 10, 'non-scaling-stroke', 'block', 'hidden', 0.7, 'sans-serif', '12px', 'italic',
-        'small-caps', 'bold', 'ultra-condensed', '2px', '3px', 'line-through', 'fill', 'pointer' );
+        '1,2,3', 10, 'non-scaling-stroke', 'block', 'hidden', 0.7, 'normal', 'sans-serif', '12px',
+        'italic', 'small-caps', 'bold', 'ultra-condensed', '2px', '3px', 'line-through', 'fill',
+        'pointer' );
 
       // Assert
       expect( style.fill ).to.equal( 'black' );
@@ -50,6 +51,7 @@ describe( 'GraphicStyle', (): void => {
       expect( style.display ).to.equal( 'block' );
       expect( style.visibility ).to.equal( 'hidden' );
       expect( style.opacity ).to.equal( 0.7 );
+      expect( style.paintOrder ).to.equal( 'normal' );
       expect( style.fontFamily ).to.equal( 'sans-serif' );
       expect( style.fontSize ).to.equal( '12px' );
       expect( style.fontStyle ).to.equal( 'italic' );
@@ -87,6 +89,7 @@ describe( 'GraphicStyle', (): void => {
       style.parseAttribute( 'vector-effect', 'non-scaling-stroke' );
       style.parseAttribute( 'display', 'block' );
       style.parseAttribute( 'visibility', 'hidden' );
+      style.parseAttribute( 'paint-order', 'normal' );
       style.parseAttribute( 'font-family', 'sans-serif' );
       style.parseAttribute( 'font-size', '12px' );
       style.parseAttribute( 'font-style', 'italic' );
@@ -110,6 +113,7 @@ describe( 'GraphicStyle', (): void => {
       expect( style.vectorEffect ).to.equal( 'non-scaling-stroke' );
       expect( style.display ).to.equal( 'block' );
       expect( style.visibility ).to.equal( 'hidden' );
+      expect( style.paintOrder ).to.equal( 'normal' );
       expect( style.fontFamily ).to.equal( 'sans-serif' );
       expect( style.fontSize ).to.equal( '12px' );
       expect( style.fontStyle ).to.equal( 'italic' );
@@ -150,9 +154,9 @@ describe( 'GraphicStyle', (): void => {
       // Arrange
       const style = new GraphicStyle();
       const sourceStyle = new GraphicStyle( 'black', 0.9, 'evenodd', 'blue', 2, 0.8, 'square',
-        'bevel', 4, '1,2,3', 10, 'non-scaling-stroke', 'block', 'hidden', 0.7, 'sans-serif', '12px',
-        'italic', 'small-caps', 'bold', 'ultra-condensed', '2px', '3px', 'line-through', 'fill',
-        'pointer' );
+        'bevel', 4, '1,2,3', 10, 'non-scaling-stroke', 'block', 'hidden', 0.7, 'normal',
+        'sans-serif', '12px', 'italic', 'small-caps', 'bold', 'ultra-condensed', '2px', '3px',
+        'line-through', 'fill', 'pointer' );
 
       // Act
       style.complementWith( sourceStyle );
@@ -173,6 +177,7 @@ describe( 'GraphicStyle', (): void => {
       expect( style.display ).to.equal( 'block' );
       expect( style.visibility ).to.equal( 'hidden' );
       expect( style.opacity ).to.equal( 0.7 );
+      expect( style.paintOrder ).to.equal( 'normal' );
       expect( style.fontFamily ).to.equal( 'sans-serif' );
       expect( style.fontSize ).to.equal( '12px' );
       expect( style.fontStyle ).to.equal( 'italic' );
@@ -189,9 +194,9 @@ describe( 'GraphicStyle', (): void => {
     it( 'should not change values in target style if they have already been set', (): void => {
       // Arrange
       const targetStyle = new GraphicStyle( 'red', 0.9, 'evenodd', 'yellow', 6, 0.8, 'square',
-        'bevel', 4, '1,2,3', 10, 'non-scaling-stroke', 'block', 'hidden', 0.7, 'sans-serif', '12px',
-        'italic', 'small-caps', 'bold', 'ultra-condensed', '2px', '3px', 'line-through', 'fill',
-        'pointer' );
+        'bevel', 4, '1,2,3', 10, 'non-scaling-stroke', 'block', 'hidden', 0.7, 'normal',
+        'sans-serif', '12px', 'italic', 'small-caps', 'bold', 'ultra-condensed', '2px', '3px',
+        'line-through', 'fill', 'pointer' );
       const sourceStyle = new GraphicStyle( 'black', undefined, undefined, 'blue', 2 );
 
       // Act
