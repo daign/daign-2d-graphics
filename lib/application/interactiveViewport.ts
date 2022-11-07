@@ -1,4 +1,4 @@
-import { ScrollHandle } from '@daign/handle';
+import { MultiTouchScrollHandle } from '@daign/handle';
 import { Vector2 } from '@daign/math';
 
 import { ITargetContext } from '../iTargetContext';
@@ -11,7 +11,7 @@ import { Viewport } from './viewport';
  */
 export class InteractiveViewport extends Viewport {
   // The object that handles the events on the viewport node.
-  private viewportHandle: ScrollHandle | undefined = undefined;
+  private viewportHandle: MultiTouchScrollHandle | undefined = undefined;
 
   /**
    * Constructor.
@@ -26,10 +26,14 @@ export class InteractiveViewport extends Viewport {
       const extractFromEvent = ( event: any ): Vector2 => {
         return new Vector2().setFromEventRelative( event );
       };
+      const extractFromTouchEvent = ( event: any, touchIndex: number ): Vector2 => {
+        return new Vector2().setFromTouchEventRelative( event, touchIndex );
+      };
 
       // The object that handles the events on the viewport node.
-      const handleConfig = { startNode: context.domNode, minimumDragDistance, extractFromEvent };
-      const handle = new ScrollHandle( handleConfig );
+      const handleConfig = { startNode: context.domNode, minimumDragDistance, extractFromEvent,
+        extractFromTouchEvent };
+      const handle = new MultiTouchScrollHandle( handleConfig );
       this.viewportHandle = handle;
 
       // Define pan action.
@@ -39,8 +43,38 @@ export class InteractiveViewport extends Viewport {
       };
 
       handle.continuing = (): void => {
-        const drag = handle.delta.clone().multiplyScalar( -1 / this.viewScale );
-        this.viewCenter.drag( drag );
+        const startPosition1 = handle.getStartPosition( 0 );
+        const startPosition2 = handle.getStartPosition( 1 );
+        const tempPosition1 = handle.getTempPosition( 0 );
+        const tempPosition2 = handle.getTempPosition( 1 );
+        const delta1 = handle.getDelta( 0 );
+
+        // When there are two positions, then it is a multi touch event. Zoom the viewport.
+        if (
+          startPosition1 !== undefined && startPosition2 !== undefined &&
+          tempPosition1 !== undefined && tempPosition2 !== undefined
+        ) {
+          // Calculate the distances between the touch points at start and current position.
+          const distanceStart = startPosition2.clone().sub( startPosition1 ).length();
+          const distanceTemp = tempPosition2.clone().sub( tempPosition1 ).length();
+
+          // Zooming by relative distance change between touch points.
+          const oldScale = this.viewScale;
+          const zoomFactor = distanceTemp / distanceStart;
+          const newScale = oldScale * zoomFactor;
+          this.viewScale = Math.max( 0.01, Math.min( 1000, newScale ) );
+
+          // The new center is calculated so that touch points keep the location that they point to.
+          const newCenter = this.viewCenter.clone()
+            .sub( tempPosition1 )
+            .multiplyScalar( 1 / zoomFactor )
+            .add( startPosition1 );
+          this.viewCenter.copy( newCenter );
+        } else if ( delta1 !== undefined ) {
+          // When there is one position only, then pan the viewport.
+          const drag = delta1.clone().multiplyScalar( -1 / this.viewScale );
+          this.viewCenter.drag( drag );
+        }
 
         this.updateViewport();
         this.application.createControls();

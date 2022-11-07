@@ -1,6 +1,6 @@
 {
   "name": "@daign/2d-graphics",
-  "version": "1.0.21",
+  "version": "1.0.22",
   "description": "Two dimensional graphics library that implements the daign-2d-pipeline.",
   "keywords": [
     "graphics",
@@ -43,8 +43,8 @@
     "@daign/mock-dom": "^1.0.6"
   },
   "dependencies": {
-    "@daign/handle": "^1.0.4",
-    "@daign/math": "^1.0.17",
+    "@daign/handle": "^1.0.6",
+    "@daign/math": "^1.0.18",
     "@daign/2d-pipeline": "^1.0.5",
     "@daign/style-sheets": "^1.0.2"
   },

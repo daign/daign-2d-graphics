@@ -93,6 +93,76 @@ describe( 'InteractiveViewport', (): void => {
       expect( ( viewport as any ).viewCenter.equals( expectedCenter ) ).to.be.true;
     } );
 
+    it( 'should update the viewport scale during a multi touch drag', (): void => {
+      // Arrange
+      const domNode = new MockNode();
+      const context = new TestContext();
+      context.domNode = domNode;
+      const application = new Application( context );
+      const viewport = new InteractiveViewport( context, application );
+
+      // Construct start event.
+      const startEvent = new MockEvent();
+      const target = new MockNode().setBoundingClientRect( { left: 1, top: 2 } );
+      startEvent.target = target;
+      startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 0 ) );
+      startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 20 ) );
+      startEvent.addTargetTouchPoint( new MockEvent().setPagePoint( 1, 2 ) );
+      startEvent.addTargetTouchPoint( new MockEvent().setPagePoint( 1, 22 ) );
+
+      // Construct drag event.
+      const dragEvent = new MockEvent();
+      dragEvent.addTouchPoint( new MockEvent().setClientPoint( 0, -10 ) );
+      dragEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 30 ) );
+
+      const endEvent = new MockEvent();
+
+      expect( ( viewport as any ).viewScale ).to.equal( 1 );
+
+      // Act
+      domNode.sendEvent( 'mousedown', startEvent );
+      global.document.sendEvent( 'mousemove', dragEvent );
+      global.document.sendEvent( 'mouseup', endEvent );
+
+      // Assert
+      expect( ( viewport as any ).viewScale ).to.equal( 2 );
+    } );
+
+    it( 'should update the viewport center during a multi touch drag', (): void => {
+      // Arrange
+      const domNode = new MockNode();
+      const context = new TestContext();
+      context.domNode = domNode;
+      const application = new Application( context );
+      const viewport = new InteractiveViewport( context, application );
+      ( viewport as any ).viewCenter.set( 0, 77 );
+
+      // Construct start event.
+      const startEvent = new MockEvent();
+      const target = new MockNode().setBoundingClientRect( { left: 0, top: 0 } );
+      startEvent.target = target;
+      startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 70 ) );
+      startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 81 ) );
+      startEvent.addTargetTouchPoint( new MockEvent().setPagePoint( 0, 70 ) );
+      startEvent.addTargetTouchPoint( new MockEvent().setPagePoint( 0, 81 ) );
+
+      // Construct drag event.
+      const dragEvent = new MockEvent();
+      dragEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 65 ) );
+      dragEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 87 ) );
+
+      const endEvent = new MockEvent();
+
+      // Act
+      domNode.sendEvent( 'mousedown', startEvent );
+      global.document.sendEvent( 'mousemove', dragEvent );
+      global.document.sendEvent( 'mouseup', endEvent );
+
+      // Assert
+      const expectedCenter = new Vector2( 0, 76 );
+      expect( ( viewport as any ).viewCenter.equals( expectedCenter ) ).to.be.true;
+    } );
+
     it( 'should deactivate selected elements when viewport area is clicked', (): void => {
       // Arrange
       const domNode = new MockNode();
