@@ -36,9 +36,12 @@ export class InteractiveViewport extends Viewport {
       const handle = new MultiTouchScrollHandle( handleConfig );
       this.viewportHandle = handle;
 
-      // Define pan action.
+      let viewScaleSnapshot: number;
+
       handle.beginning = (): boolean => {
+        // Save snapshots of center and scale values at drag start.
         this.viewCenter.snap();
+        viewScaleSnapshot = this.viewScale;
         return true;
       };
 
@@ -52,20 +55,24 @@ export class InteractiveViewport extends Viewport {
         // When there are two positions, then it is a multi touch event. Zoom the viewport.
         if (
           startPosition1 !== undefined && startPosition2 !== undefined &&
-          tempPosition1 !== undefined && tempPosition2 !== undefined
+          tempPosition1 !== undefined && tempPosition2 !== undefined &&
+          this.viewCenter.snapshot !== undefined
         ) {
           // Calculate the distances between the touch points at start and current position.
-          const distanceStart = startPosition2.clone().sub( startPosition1 ).length();
-          const distanceTemp = tempPosition2.clone().sub( tempPosition1 ).length();
+          let distanceStart = startPosition2.clone().sub( startPosition1 ).length();
+          let distanceTemp = tempPosition2.clone().sub( tempPosition1 ).length();
+
+          // Distance between touch point should not be zero, should be at least 1.
+          distanceStart = Math.max( distanceStart, 1 );
+          distanceTemp = Math.max( distanceTemp, 1 );
 
           // Zooming by relative distance change between touch points.
-          const oldScale = this.viewScale;
           const zoomFactor = distanceTemp / distanceStart;
-          const newScale = oldScale * zoomFactor;
+          const newScale = viewScaleSnapshot * zoomFactor;
           this.viewScale = Math.max( 0.01, Math.min( 1000, newScale ) );
 
           // The new center is calculated so that touch points keep the location that they point to.
-          const newCenter = this.viewCenter.clone()
+          const newCenter = this.viewCenter.snapshot.clone()
             .sub( tempPosition1 )
             .multiplyScalar( 1 / zoomFactor )
             .add( startPosition1 );

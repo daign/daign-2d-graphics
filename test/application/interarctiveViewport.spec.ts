@@ -9,6 +9,16 @@ import { TestContext } from '../testContext';
 
 declare var global: any;
 
+/**
+ * Sleep function.
+ * @param milliseconds - The time to pause code execution.
+ */
+const sleep = ( milliseconds: number ): Promise<void> => {
+  return new Promise( ( resolve: any ): void => {
+    setTimeout( resolve, milliseconds );
+  } );
+};
+
 describe( 'InteractiveViewport', (): void => {
   beforeEach( (): void => {
     global.document = new MockDocument();
@@ -158,6 +168,48 @@ describe( 'InteractiveViewport', (): void => {
       const expectedCenter = new Vector2( 0, 76 );
       expect( ( viewport as any ).viewCenter.equals( expectedCenter ) ).to.be.true;
     } );
+
+    it( 'should update the viewport center during two multi touch drag events',
+      async (): Promise<void> => {
+        // Arrange
+        const domNode = new MockNode();
+        const context = new TestContext();
+        context.domNode = domNode;
+        const application = new Application( context );
+        const viewport = new InteractiveViewport( context, application );
+        ( viewport as any ).viewCenter.set( 0, 77 );
+
+        // Construct start event.
+        const startEvent = new MockEvent();
+        const target = new MockNode().setBoundingClientRect( { left: 0, top: 0 } );
+        startEvent.target = target;
+        startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 70 ).setPagePoint( 0, 70 ) );
+        startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 81 ).setPagePoint( 0, 81 ) );
+
+        // Construct drag events.
+        const dragEvent1 = new MockEvent();
+        dragEvent1.addTouchPoint( new MockEvent().setClientPoint( 0, 65 ) );
+        dragEvent1.addTouchPoint( new MockEvent().setClientPoint( 0, 87 ) );
+        const dragEvent2 = new MockEvent();
+        dragEvent2.addTouchPoint( new MockEvent().setClientPoint( 0, 70 ) );
+        dragEvent2.addTouchPoint( new MockEvent().setClientPoint( 0, 81 ) );
+
+        const endEvent = new MockEvent();
+
+        // Act
+        domNode.sendEvent( 'mousedown', startEvent );
+        global.document.sendEvent( 'mousemove', dragEvent1 );
+        // Wait because the handling of the drag events is throttled.
+        await sleep( 50 );
+        global.document.sendEvent( 'mousemove', dragEvent2 );
+        global.document.sendEvent( 'mouseup', endEvent );
+
+        // Assert
+        expect( ( viewport as any ).viewScale ).to.equal( 1 );
+        const expectedCenter = new Vector2( 0, 77 );
+        expect( ( viewport as any ).viewCenter.equals( expectedCenter ) ).to.be.true;
+      }
+    );
 
     it( 'should not update scale or center when drag event is missing coordinates', (): void => {
       // Arrange
