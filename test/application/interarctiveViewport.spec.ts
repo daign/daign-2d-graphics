@@ -105,10 +105,8 @@ describe( 'InteractiveViewport', (): void => {
       const startEvent = new MockEvent();
       const target = new MockNode().setBoundingClientRect( { left: 1, top: 2 } );
       startEvent.target = target;
-      startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 0 ) );
-      startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 20 ) );
-      startEvent.addTargetTouchPoint( new MockEvent().setPagePoint( 1, 2 ) );
-      startEvent.addTargetTouchPoint( new MockEvent().setPagePoint( 1, 22 ) );
+      startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 0 ).setPagePoint( 1, 2 ) );
+      startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 20 ).setPagePoint( 1, 22 ) );
 
       // Construct drag event.
       const dragEvent = new MockEvent();
@@ -141,10 +139,8 @@ describe( 'InteractiveViewport', (): void => {
       const startEvent = new MockEvent();
       const target = new MockNode().setBoundingClientRect( { left: 0, top: 0 } );
       startEvent.target = target;
-      startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 70 ) );
-      startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 81 ) );
-      startEvent.addTargetTouchPoint( new MockEvent().setPagePoint( 0, 70 ) );
-      startEvent.addTargetTouchPoint( new MockEvent().setPagePoint( 0, 81 ) );
+      startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 70 ).setPagePoint( 0, 70 ) );
+      startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 81 ).setPagePoint( 0, 81 ) );
 
       // Construct drag event.
       const dragEvent = new MockEvent();
@@ -161,6 +157,40 @@ describe( 'InteractiveViewport', (): void => {
       // Assert
       const expectedCenter = new Vector2( 0, 76 );
       expect( ( viewport as any ).viewCenter.equals( expectedCenter ) ).to.be.true;
+    } );
+
+    it( 'should not update scale or center when drag event is missing coordinates', (): void => {
+      // Arrange
+      const domNode = new MockNode();
+      const context = new TestContext();
+      context.domNode = domNode;
+      const application = new Application( context );
+      const viewport = new InteractiveViewport( context, application );
+
+      // Construct start event.
+      const startEvent = new MockEvent();
+      const target = new MockNode().setBoundingClientRect( { left: 0, top: 0 } );
+      startEvent.target = target;
+      startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 70 ).setPagePoint( 0, 70 ) );
+      startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 81 ).setPagePoint( 0, 81 ) );
+
+      // Drag event without any coordinates.
+      const dragEvent = new MockEvent();
+
+      const endEvent = new MockEvent();
+
+      const startCenter = new Vector2( 0.5, 0.5 );
+      expect( ( viewport as any ).viewCenter.equals( startCenter ) ).to.be.true;
+      expect( ( viewport as any ).viewScale ).to.equal( 1 );
+
+      // Act
+      domNode.sendEvent( 'mousedown', startEvent );
+      global.document.sendEvent( 'mousemove', dragEvent );
+      global.document.sendEvent( 'mouseup', endEvent );
+
+      // Assert
+      expect( ( viewport as any ).viewCenter.equals( startCenter ) ).to.be.true;
+      expect( ( viewport as any ).viewScale ).to.equal( 1 );
     } );
 
     it( 'should deactivate selected elements when viewport area is clicked', (): void => {
