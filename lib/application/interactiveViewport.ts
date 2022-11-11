@@ -1,5 +1,5 @@
 import { MultiTouchScrollHandle } from '@daign/handle';
-import { Vector2 } from '@daign/math';
+import { Matrix3, Vector2 } from '@daign/math';
 
 import { ITargetContext } from '../iTargetContext';
 
@@ -37,11 +37,13 @@ export class InteractiveViewport extends Viewport {
       this.viewportHandle = handle;
 
       let viewScaleSnapshot: number;
+      let transformationSnapshot: Matrix3;
 
       handle.beginning = (): boolean => {
         // Save snapshots of center and scale values at drag start.
         this.viewCenter.snap();
         viewScaleSnapshot = this.viewScale;
+        transformationSnapshot = this.transformation.inverseTransformMatrix.clone();
         return true;
       };
 
@@ -71,11 +73,16 @@ export class InteractiveViewport extends Viewport {
           const newScale = viewScaleSnapshot * zoomFactor;
           this.viewScale = Math.max( 0.01, Math.min( 1000, newScale ) );
 
+          const transformedTempPosition1 = tempPosition1.clone()
+            .transform( transformationSnapshot );
+          const transformedstartPosition1 = startPosition1.clone()
+            .transform( transformationSnapshot );
+
           // The new center is calculated so that touch points keep the location that they point to.
           const newCenter = this.viewCenter.snapshot.clone()
-            .sub( tempPosition1 )
+            .sub( transformedTempPosition1 )
             .multiplyScalar( 1 / zoomFactor )
-            .add( startPosition1 );
+            .add( transformedstartPosition1 );
           this.viewCenter.copy( newCenter );
         } else if ( delta1 !== undefined ) {
           // When there is one position only, then pan the viewport.
