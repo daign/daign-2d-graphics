@@ -25,7 +25,7 @@ class ObservableObject extends Observable {
  */
 export class Viewport extends Group {
   // The target drawing context.
-  private context: ITargetContext;
+  protected context: ITargetContext;
 
   // The corresponding application.
   protected application: Application;

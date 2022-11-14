@@ -14,6 +14,48 @@ export class InteractiveViewport extends Viewport {
   private viewportHandle: MultiTouchScrollHandle | undefined = undefined;
 
   /**
+   * Get a vector from the touch position of an event relative to the drawing's context.
+   * Will throw error when the event does not contain position information.
+   * @param event - The event to use.
+   * @param touchIndex - The index of the touch point.
+   * @returns The resulting vector.
+   */
+  private extractFromTouchEventRelativeToContext = ( event: any, touchIndex: number ): Vector2 => {
+    if (
+      !this.context.domNode ||
+      !this.context.domNode.getBoundingClientRect
+    ) {
+      throw new Error( 'Unable to read offset of context node.' );
+    }
+
+    // Get the offset of the context node relative to the page.
+    const rect = this.context.domNode.getBoundingClientRect();
+    if (
+      !rect ||
+      rect.left === undefined ||
+      rect.top === undefined
+    ) {
+      throw new Error( 'Unable to read offset of context node.' );
+    }
+
+    if (
+      !event ||
+      !event.touches ||
+      !event.touches[ touchIndex ] ||
+      event.touches[ touchIndex ].pageX === undefined ||
+      event.touches[ touchIndex ].pageY === undefined
+    ) {
+      throw new Error( 'Unable to extract position from event.' );
+    }
+
+    /* Calculate position relative to context node by subtracting the target's offset from the touch
+     * position on the page. */
+    const x = event.touches[ touchIndex ].pageX - rect.left;
+    const y = event.touches[ touchIndex ].pageY - rect.top;
+    return new Vector2( x, y );
+  };
+
+  /**
    * Constructor.
    * @param context - The target context.
    * @param application - The corresponding application.
@@ -26,9 +68,7 @@ export class InteractiveViewport extends Viewport {
       const extractFromEvent = ( event: any ): Vector2 => {
         return new Vector2().setFromEventRelative( event );
       };
-      const extractFromTouchEvent = ( event: any, touchIndex: number ): Vector2 => {
-        return new Vector2().setFromTouchEventRelative( event, touchIndex );
-      };
+      const extractFromTouchEvent = this.extractFromTouchEventRelativeToContext;
 
       // The object that handles the events on the viewport node.
       const handleConfig = { startNode: context.domNode, minimumDragDistance, extractFromEvent,

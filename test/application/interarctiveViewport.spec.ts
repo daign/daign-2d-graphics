@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as sinon from 'sinon';
+import { spy } from 'sinon';
 
 import { MockDocument, MockEvent, MockNode } from '@daign/mock-dom';
 import { Vector2 } from '@daign/math';
@@ -24,6 +24,84 @@ describe( 'InteractiveViewport', (): void => {
     global.document = new MockDocument();
   } );
 
+  describe( 'extractFromTouchEventRelativeToContext', (): void => {
+    it( 'should calculate touch position relative to the drawing context', (): void => {
+      // Arrange
+      const domNode = new MockNode().setBoundingClientRect( { left: 5, top: 7 } );
+      const context = new TestContext();
+      context.domNode = domNode;
+      const application = new Application( context );
+      const viewport = new InteractiveViewport( context, application );
+
+      const event = new MockEvent();
+      event.addTouchPoint( new MockEvent().setPagePoint( 11, 22 ) );
+
+      // Act
+      const result = ( viewport as any ).extractFromTouchEventRelativeToContext( event, 0 );
+
+      // Assert
+      expect( result.equals( new Vector2( 6, 15 ) ) ).to.be.true;
+    } );
+
+    it( 'should throw error if context has no dom node', (): void => {
+      // Arrange
+      const context = new TestContext();
+      const application = new Application( context );
+      const viewport = new InteractiveViewport( context, application );
+
+      const event = new MockEvent();
+      event.addTouchPoint( new MockEvent().setPagePoint( 11, 22 ) );
+
+      // Act
+      const badFn = (): void => {
+        ( viewport as any ).extractFromTouchEventRelativeToContext( event, 0 );
+      };
+
+      // Assert
+      expect( badFn ).to.throw( 'Unable to read offset of context node.' );
+    } );
+
+    it( 'should throw error if bounding client rect of context can not be read', (): void => {
+      // Arrange
+      const domNode = new MockNode();
+      const context = new TestContext();
+      context.domNode = domNode;
+      const application = new Application( context );
+      const viewport = new InteractiveViewport( context, application );
+
+      const event = new MockEvent();
+      event.addTouchPoint( new MockEvent().setPagePoint( 11, 22 ) );
+
+      // Act
+      const badFn = (): void => {
+        ( viewport as any ).extractFromTouchEventRelativeToContext( event, 0 );
+      };
+
+      // Assert
+      expect( badFn ).to.throw( 'Unable to read offset of context node.' );
+    } );
+
+    it( 'should throw error if event is missing position information', (): void => {
+      // Arrange
+      const domNode = new MockNode().setBoundingClientRect( { left: 5, top: 7 } );
+      const context = new TestContext();
+      context.domNode = domNode;
+      const application = new Application( context );
+      const viewport = new InteractiveViewport( context, application );
+
+      const event = new MockEvent();
+      event.addTouchPoint( new MockEvent() );
+
+      // Act
+      const badFn = (): void => {
+        ( viewport as any ).extractFromTouchEventRelativeToContext( event, 0 );
+      };
+
+      // Assert
+      expect( badFn ).to.throw( 'Unable to extract position from event.' );
+    } );
+  } );
+
   describe( 'constructor', (): void => {
     it( 'should add 3 event listeners to the dom node', (): void => {
       // Arrange
@@ -31,7 +109,7 @@ describe( 'InteractiveViewport', (): void => {
       const context = new TestContext();
       context.domNode = domNode;
       const application = new Application( context );
-      const addEventListenerSpy = sinon.spy( domNode, 'addEventListener' );
+      const addEventListenerSpy = spy( domNode, 'addEventListener' );
 
       // Act
       // tslint:disable-next-line:no-unused-expression-chai
@@ -105,7 +183,7 @@ describe( 'InteractiveViewport', (): void => {
 
     it( 'should update the viewport scale during a multi touch drag', (): void => {
       // Arrange
-      const domNode = new MockNode();
+      const domNode = new MockNode().setBoundingClientRect( { left: 1, top: 2 } );
       const context = new TestContext();
       context.domNode = domNode;
       const application = new Application( context );
@@ -113,7 +191,7 @@ describe( 'InteractiveViewport', (): void => {
 
       // Construct start event.
       const startEvent = new MockEvent();
-      const target = new MockNode().setBoundingClientRect( { left: 1, top: 2 } );
+      const target = new MockNode();
       startEvent.target = target;
       startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 0 ).setPagePoint( 1, 2 ) );
       startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 20 ).setPagePoint( 1, 22 ) );
@@ -138,7 +216,7 @@ describe( 'InteractiveViewport', (): void => {
 
     it( 'should update the viewport center during a multi touch drag', (): void => {
       // Arrange
-      const domNode = new MockNode();
+      const domNode = new MockNode().setBoundingClientRect( { left: 0, top: 0 } );
       const context = new TestContext();
       context.domNode = domNode;
       const application = new Application( context );
@@ -147,7 +225,7 @@ describe( 'InteractiveViewport', (): void => {
 
       // Construct start event.
       const startEvent = new MockEvent();
-      const target = new MockNode().setBoundingClientRect( { left: 0, top: 0 } );
+      const target = new MockNode();
       startEvent.target = target;
       startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 70 ).setPagePoint( 0, 70 ) );
       startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 81 ).setPagePoint( 0, 81 ) );
@@ -172,7 +250,7 @@ describe( 'InteractiveViewport', (): void => {
     it( 'should update the viewport center during two multi touch drag events',
       async (): Promise<void> => {
         // Arrange
-        const domNode = new MockNode();
+        const domNode = new MockNode().setBoundingClientRect( { left: 0, top: 0 } );
         const context = new TestContext();
         context.domNode = domNode;
         const application = new Application( context );
@@ -181,7 +259,7 @@ describe( 'InteractiveViewport', (): void => {
 
         // Construct start event.
         const startEvent = new MockEvent();
-        const target = new MockNode().setBoundingClientRect( { left: 0, top: 0 } );
+        const target = new MockNode();
         startEvent.target = target;
         startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 70 ).setPagePoint( 0, 70 ) );
         startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 81 ).setPagePoint( 0, 81 ) );
@@ -213,7 +291,7 @@ describe( 'InteractiveViewport', (): void => {
 
     it( 'should not update scale or center when drag event is missing coordinates', (): void => {
       // Arrange
-      const domNode = new MockNode();
+      const domNode = new MockNode().setBoundingClientRect( { left: 0, top: 0 } );
       const context = new TestContext();
       context.domNode = domNode;
       const application = new Application( context );
@@ -221,7 +299,7 @@ describe( 'InteractiveViewport', (): void => {
 
       // Construct start event.
       const startEvent = new MockEvent();
-      const target = new MockNode().setBoundingClientRect( { left: 0, top: 0 } );
+      const target = new MockNode();
       startEvent.target = target;
       startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 70 ).setPagePoint( 0, 70 ) );
       startEvent.addTouchPoint( new MockEvent().setClientPoint( 0, 81 ).setPagePoint( 0, 81 ) );
@@ -251,7 +329,7 @@ describe( 'InteractiveViewport', (): void => {
       const context = new TestContext();
       context.domNode = domNode;
       const application = new Application( context );
-      const spySetSelection = sinon.spy( application.selectionManager, 'setSelection' );
+      const spySetSelection = spy( application.selectionManager, 'setSelection' );
       // tslint:disable-next-line:no-unused-expression-chai
       new InteractiveViewport( context, application );
 
