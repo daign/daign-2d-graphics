@@ -41,7 +41,7 @@ describe( 'FollowAlongModifier', (): void => {
       expect( modifiedPoints[ 3 ].equals( new Vector2( 9, 11 ) ) ).to.be.true;
     } );
 
-    it( 'should not modfify vectors when disabled', (): void => {
+    it( 'should not modify vectors when disabled', (): void => {
       // Arrange
       const modifier = new FollowAlongModifier();
       modifier.enabled = false;
@@ -64,7 +64,7 @@ describe( 'FollowAlongModifier', (): void => {
       expect( modifiedPoints[ 3 ].equals( new Vector2( 7, 8 ) ) ).to.be.true;
     } );
 
-    it( 'should not modfify vectors when index is out of range', (): void => {
+    it( 'should not modify vectors when index is out of range', (): void => {
       // Arrange
       const modifier = new FollowAlongModifier();
       const updatedPoints = [

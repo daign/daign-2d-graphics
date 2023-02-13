@@ -1,10 +1,11 @@
 import { expect } from 'chai';
+import { spy } from 'sinon';
 
 import { Matrix3, Vector2 } from '@daign/math';
 import { View } from '@daign/2d-pipeline';
 
-import { Application, ControlObject, ControlPoint, FixedRadiusCircle, RoundingModifier,
-  TwoPointRectangle } from '../../lib';
+import { Application, ControlObject, ControlPoint, FixedRadiusCircle, FollowAlongModifier,
+  RoundingModifier, TwoPointRectangle } from '../../lib';
 import { TestContext } from '../testContext';
 
 class TestObject extends ControlObject {
@@ -226,6 +227,46 @@ describe( 'ControlPoint', (): void => {
       // The control point is not rounded, but the point applied back to the control object is.
       expect( controlPoint.center.equals( new Vector2( 3.1, 5.5 ) ) ).to.be.true;
       expect( controlObject.points.getElement( 0 )!.equals( new Vector2( 3, 6 ) ) ).to.be.true;
+    } );
+
+    it( 'should redraw only once when multiple points are modified', (): void => {
+      // Arrange
+      const context = new TestContext();
+      const application = new Application( context );
+
+      const view = new View();
+      view.mountNode( application );
+
+      const points = [
+        new Vector2( 1, 2 ),
+        new Vector2( 3, 4 ),
+        new Vector2( 5, 6 )
+      ];
+
+      const modifier = new FollowAlongModifier();
+
+      const controlObject = new TestObject();
+      controlObject.controlModifier = modifier;
+      controlObject.points.elements = points;
+      application.drawingLayer.appendChild( controlObject );
+
+      const targetTransformation = new Matrix3().setIdentity();
+      const controlPoint = new ControlPoint( points[ 0 ], targetTransformation, application,
+        controlObject, 0 );
+
+      expect( controlPoint.center.equals( points[ 0 ] ) ).to.be.true;
+      controlPoint.snap();
+
+      const redrawSpy = spy( application.drawingLayer.redrawObservable, 'notify' );
+
+      // Act
+      controlPoint.drag( new Vector2( 2, 4 ) );
+
+      // Assert
+      expect( redrawSpy.callCount ).to.equal( 1 );
+      expect( controlObject.points.getElement( 0 )!.equals( new Vector2( 3, 6 ) ) ).to.be.true;
+      expect( controlObject.points.getElement( 1 )!.equals( new Vector2( 5, 8 ) ) ).to.be.true;
+      expect( controlObject.points.getElement( 2 )!.equals( new Vector2( 7, 10 ) ) ).to.be.true;
     } );
   } );
 } );

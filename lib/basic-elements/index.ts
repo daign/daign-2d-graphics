@@ -7,4 +7,5 @@ export { ScalableText } from './scalableText';
 export { SinglePointElement } from './singlePointElement';
 export { Text } from './text';
 export { TwoPointCircle } from './twoPointCircle';
+export { TwoPointImage } from './twoPointImage';
 export { TwoPointRectangle } from './twoPointRectangle';

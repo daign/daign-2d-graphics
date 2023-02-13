@@ -18,6 +18,7 @@ export { ScalableText } from './basic-elements/scalableText';
 export { SinglePointElement } from './basic-elements/singlePointElement';
 export { Text } from './basic-elements/text';
 export { TwoPointCircle } from './basic-elements/twoPointCircle';
+export { TwoPointImage } from './basic-elements/twoPointImage';
 export { TwoPointRectangle } from './basic-elements/twoPointRectangle';
 
 export { ButtonControl } from './control-elements/buttonControl';
