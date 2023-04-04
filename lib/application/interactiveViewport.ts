@@ -71,9 +71,12 @@ export class InteractiveViewport extends Viewport {
       const extractFromTouchEvent = this.extractFromTouchEventRelativeToContext;
 
       // The object that handles the events on the viewport node.
-      const handleConfig = { startNode: context.domNode, minimumDragDistance, extractFromEvent,
-        extractFromTouchEvent };
-      const handle = new MultiTouchScrollHandle( handleConfig );
+      const handle = new MultiTouchScrollHandle();
+      handle.setStartNode( context.domNode );
+      handle.minimumDragDistance = minimumDragDistance;
+      handle.extractFromEvent = extractFromEvent;
+      handle.extractFromTouchEvent = extractFromTouchEvent;
+
       this.viewportHandle = handle;
 
       let viewScaleSnapshot: number;

@@ -1,5 +1,5 @@
 import { Vector2 } from '@daign/math';
-import { MatrixTransform } from '@daign/2d-pipeline';
+import { NativeScaleTransform, NativeTranslateTransform } from '@daign/2d-pipeline';
 import { Observable } from '@daign/observable';
 
 import { Group } from '../basic-elements/group';
@@ -24,14 +24,10 @@ class ObservableObject extends Observable {
  * for zooming and panning the content around.
  */
 export class Viewport extends Group {
-  // The target drawing context.
-  protected context: ITargetContext;
-
-  // The corresponding application.
-  protected application: Application;
-
-  // The transformation applied to the view's content.
-  private viewTransformation: MatrixTransform = new MatrixTransform();
+  // The transformations applied to the view's content.
+  private decenteringTransform: NativeTranslateTransform = new NativeTranslateTransform();
+  private scaleTransform: NativeScaleTransform = new NativeScaleTransform();
+  private translateTransform: NativeTranslateTransform = new NativeTranslateTransform();
 
   // Content coordinates at the center of the viewport.
   protected viewCenter: Vector2 = new Vector2();
@@ -44,10 +40,13 @@ export class Viewport extends Group {
 
   /**
    * Constructor.
-   * @param context - The target context.
+   * @param context - The target drawing context.
    * @param application - The corresponding application.
    */
-  public constructor( context: ITargetContext, application: Application ) {
+  public constructor(
+    protected context: ITargetContext,
+    protected application: Application
+  ) {
     super();
 
     this.context = context;
@@ -56,7 +55,11 @@ export class Viewport extends Group {
     // Set center of target's drawing space as center.
     this.viewCenter.copy( context.size ).multiplyScalar( 0.5 );
 
-    this.transformation.push( this.viewTransformation );
+    // Add the transformations that transform the viewport.
+    this.scaleTransform.scaling.set( 1, 1 );
+    this.transformation.push( this.translateTransform );
+    this.transformation.push( this.scaleTransform );
+    this.transformation.push( this.decenteringTransform );
   }
 
   /**
@@ -89,9 +92,8 @@ export class Viewport extends Group {
     const scaling = new Vector2( this.viewScale, this.viewScale );
     const translation = this.context.size.clone().multiplyScalar( 0.5 );
 
-    this.viewTransformation.matrix.setIdentity();
-    this.viewTransformation.matrix.applyTranslation( decentering );
-    this.viewTransformation.matrix.applyScaling( scaling );
-    this.viewTransformation.matrix.applyTranslation( translation );
+    this.decenteringTransform.translation.copy( decentering );
+    this.scaleTransform.scaling.copy( scaling );
+    this.translateTransform.translation.copy( translation );
   }
 }

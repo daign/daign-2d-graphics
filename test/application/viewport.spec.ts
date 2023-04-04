@@ -26,6 +26,19 @@ describe( 'Viewport', (): void => {
       const expectedCenter = new Vector2( 6, 7 );
       expect( ( viewport as any ).viewCenter.equals( expectedCenter ) ).to.be.true;
     } );
+
+    it( 'should add three transformations', (): void => {
+      // Arrange
+      const context = new TestContext();
+      context._size.set( 12, 14 );
+      const application = new Application( context );
+
+      // Act
+      const viewport = new Viewport( context, application );
+
+      // Assert
+      expect( viewport.transformation.length ).to.equal( 3 );
+    } );
   } );
 
   describe( 'fitToContent', (): void => {
