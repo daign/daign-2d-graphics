@@ -134,14 +134,11 @@ export class InteractiveViewport extends Viewport {
         }
 
         this.updateViewport();
-        this.application.createControls();
-        this.redrawObservable.notify();
       };
 
       // Define action to deactivate element.
       handle.clicked = (): void => {
         this.application.selectionManager.setSelection( null, null );
-        this.redrawObservable.notify();
       };
 
       // Define zoom action.
@@ -158,8 +155,6 @@ export class InteractiveViewport extends Viewport {
         this.viewCenter.sub( mousePosition ).multiplyScalar( 1 / factor ).add( mousePosition );
 
         this.updateViewport();
-        this.application.createControls();
-        this.redrawObservable.notify();
       };
     }
   }

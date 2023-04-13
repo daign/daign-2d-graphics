@@ -7,6 +7,7 @@ export { ApplicationView } from './application/applicationView';
 export { ControlLayer } from './application/controlLayer';
 export { InteractiveViewport } from './application/interactiveViewport';
 export { SelectionManager } from './application/selectionManager';
+export { UpdateManager } from './application/updateManager';
 export { Viewport } from './application/viewport';
 
 export { FixedRadiusCircle } from './basic-elements/fixedRadiusCircle';

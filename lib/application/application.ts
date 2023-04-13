@@ -5,6 +5,7 @@ import { ControlLayer } from './controlLayer';
 import { InteractiveViewport } from './interactiveViewport';
 import { SelectionManager } from './selectionManager';
 import { Viewport } from './viewport';
+import { UpdateManager } from './updateManager';
 
 /**
  * Application consisting of a drawing layer and a control layer.
@@ -12,6 +13,9 @@ import { Viewport } from './viewport';
 export class Application extends Group {
   // The selection manager.
   public selectionManager: SelectionManager;
+
+  // The update manager.
+  public updateManager: UpdateManager;
 
   // The drawing layer and interactive viewport.
   public drawingLayer: Viewport;
@@ -37,16 +41,15 @@ export class Application extends Group {
       this.controlLayer = new ControlLayer( this );
       this.appendChild( this.controlLayer );
 
-      // Build controls when selection changes.
-      this.selectionManager.subscribeToChanges( (): void => {
-        this.createControls();
-        this.drawingLayer.redrawObservable.notify();
-      } );
+
     } else {
       // If not interactive then use the normal Viewport and no ControlLayer.
       this.drawingLayer = new Viewport( context, this );
       this.appendChild( this.drawingLayer );
     }
+
+    this.updateManager = new UpdateManager( this.selectionManager, this.controlLayer,
+      this.drawingLayer );
   }
 
   /**
@@ -55,14 +58,5 @@ export class Application extends Group {
    */
   public fitToContent( margin?: number ): void {
     this.drawingLayer.fitToContent( margin );
-  }
-
-  /**
-   * Create the control elements for the active control object.
-   */
-  public createControls(): void {
-    if ( this.controlLayer ) {
-      this.controlLayer.createControls();
-    }
   }
 }

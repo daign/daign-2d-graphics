@@ -1,21 +1,10 @@
 import { Vector2 } from '@daign/math';
 import { NativeScaleTransform, NativeTranslateTransform } from '@daign/2d-pipeline';
-import { Observable } from '@daign/observable';
 
 import { Group } from '../basic-elements/group';
 import { ITargetContext } from '../iTargetContext';
 
 import { Application } from './application';
-
-// Observable implementation with a public notify method.
-class ObservableObject extends Observable {
-  public constructor() {
-    super();
-  }
-  public notify(): void {
-    this.notifyObservers();
-  }
-}
 
 /**
  * Group that acts as an viewport by applying a transformation to bring objects into the visible
@@ -34,9 +23,6 @@ export class Viewport extends Group {
 
   // Scaling of the viewport content.
   protected viewScale: number = 1;
-
-  // Observable to signal redraw execution.
-  public redrawObservable: ObservableObject = new ObservableObject();
 
   /**
    * Constructor.
@@ -95,5 +81,7 @@ export class Viewport extends Group {
     this.decenteringTransform.translation.copy( decentering );
     this.scaleTransform.scaling.copy( scaling );
     this.translateTransform.translation.copy( translation );
+
+    this.application.updateManager.viewportInputEvent.invoke();
   }
 }

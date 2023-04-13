@@ -1,6 +1,6 @@
 {
   "name": "@daign/2d-graphics",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Two dimensional graphics library that implements the daign-2d-pipeline.",
   "keywords": [
     "graphics",

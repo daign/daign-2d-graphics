@@ -4,10 +4,19 @@ import { spy } from 'sinon';
 import { MockDocument, MockEvent, MockNode } from '@daign/mock-dom';
 import { Vector2 } from '@daign/math';
 
-import { Application, InteractiveViewport } from '../../lib';
+import { Application, ControlObject, InteractiveViewport } from '../../lib';
 import { TestContext } from '../testContext';
 
 declare var global: any;
+
+class TestObject extends ControlObject {
+  public constructor() {
+    super();
+  }
+  public redraw(): void {
+    super.redraw();
+  }
+}
 
 /**
  * Sleep function.
@@ -181,6 +190,30 @@ describe( 'InteractiveViewport', (): void => {
       expect( ( viewport as any ).viewCenter.equals( expectedCenter ) ).to.be.true;
     } );
 
+    it( 'should invoke the redraw event when dragging', (): void => {
+      // Arrange
+      const domNode = new MockNode();
+      const context = new TestContext();
+      context.domNode = domNode;
+      const application = new Application( context, true );
+
+      const startEvent = new MockEvent();
+      startEvent.setOffsetPoint( 100, 100 );
+      startEvent.setClientPoint( 0, 0 );
+      const dragEvent = new MockEvent().setClientPoint( 1, 10 );
+      const endEvent = new MockEvent().setClientPoint( 2, 10 );
+
+      const redrawSpy = spy( application.updateManager.redrawEvent, 'invoke' );
+
+      // Act
+      domNode.sendEvent( 'mousedown', startEvent );
+      global.document.sendEvent( 'mousemove', dragEvent );
+      global.document.sendEvent( 'mouseup', endEvent );
+
+      // Assert
+      expect( redrawSpy.callCount ).to.equal( 1 );
+    } );
+
     it( 'should update the viewport scale during a multi touch drag', (): void => {
       // Arrange
       const domNode = new MockNode().setBoundingClientRect( { left: 1, top: 2 } );
@@ -344,6 +377,31 @@ describe( 'InteractiveViewport', (): void => {
       // Assert
       expect( spySetSelection.calledOnce ).to.be.true;
       expect( spySetSelection.calledWith( null, null ) ).to.be.true;
+    } );
+
+    it( 'should invoke the redraw event when elements are deselected', (): void => {
+      // Arrange
+      const domNode = new MockNode();
+      const context = new TestContext();
+      context.domNode = domNode;
+      const application = new Application( context );
+      // tslint:disable-next-line:no-unused-expression-chai
+      new InteractiveViewport( context, application );
+      const controlObject = new TestObject();
+      application.selectionManager.setSelection( controlObject, null );
+
+      const redrawSpy = spy( application.updateManager.redrawEvent, 'invoke' );
+
+      const clickEvent = new MockEvent();
+      clickEvent.setOffsetPoint( 100, 100 );
+      clickEvent.setClientPoint( 0, 0 );
+
+      // Act
+      domNode.sendEvent( 'mousedown', clickEvent );
+      global.document.sendEvent( 'mouseup', clickEvent );
+
+      // Assert
+      expect( redrawSpy.callCount ).to.equal( 1 );
     } );
 
     it( 'should update the viewport scale when scrolling', (): void => {

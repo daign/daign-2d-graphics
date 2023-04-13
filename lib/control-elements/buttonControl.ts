@@ -1,7 +1,6 @@
 import { Matrix3 } from '@daign/math';
 import { MatrixTransform } from '@daign/2d-pipeline';
 
-import { Application } from '../application';
 import { FixedRadiusCircle, Group } from '../basic-elements';
 
 import { ButtonObject } from './buttonObject';
@@ -13,9 +12,6 @@ export class ButtonControl extends Group {
   // The callback to call on click.
   private callback: () => void;
 
-  // The corresponding application.
-  private application: Application;
-
   /**
    * Constructor.
    * @param buttonObject - The button object to display.
@@ -23,11 +19,9 @@ export class ButtonControl extends Group {
    * @param application - The corresponding application.
    */
   public constructor(
-    buttonObject: ButtonObject, targetTransformation: Matrix3, application: Application
+    buttonObject: ButtonObject, targetTransformation: Matrix3
   ) {
     super();
-
-    this.application = application;
 
     this.callback = buttonObject.callback;
 
@@ -56,7 +50,5 @@ export class ButtonControl extends Group {
    */
   public click(): void {
     this.callback();
-    this.application.createControls();
-    this.application.drawingLayer.redrawObservable.notify();
   }
 }

@@ -85,7 +85,7 @@ export abstract class ControlObject extends Group {
 
     // Add the button controls.
     this.buttons.forEach( ( button: ButtonObject ): void => {
-      const buttonControl = new ButtonControl( button, transformation, application );
+      const buttonControl = new ButtonControl( button, transformation );
       group.appendChild( buttonControl );
     } );
 

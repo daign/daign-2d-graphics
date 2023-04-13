@@ -111,8 +111,5 @@ export class ControlPoint extends Group {
     } );
 
     this.calculateOffset();
-
-    this.application.createControls();
-    this.application.drawingLayer.redrawObservable.notify();
   }
 }

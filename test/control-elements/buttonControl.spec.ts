@@ -3,9 +3,7 @@ import * as sinon from 'sinon';
 
 import { Matrix3, Vector2 } from '@daign/math';
 
-import { Application, ButtonControl, ButtonObject, FixedRadiusCircle,
-  TwoPointRectangle } from '../../lib';
-import { TestContext } from '../testContext';
+import { ButtonControl, ButtonObject, FixedRadiusCircle, TwoPointRectangle } from '../../lib';
 
 describe( 'ButtonControl', (): void => {
   describe( 'constructor', (): void => {
@@ -17,11 +15,9 @@ describe( 'ButtonControl', (): void => {
       buttonObject.anchor = anchorPoint;
 
       const targetTransformation = new Matrix3().setTranslation( new Vector2( 2, 3 ) );
-      const context = new TestContext();
-      const application = new Application( context );
 
       // Act
-      const buttonControl = new ButtonControl( buttonObject, targetTransformation, application );
+      const buttonControl = new ButtonControl( buttonObject, targetTransformation );
 
       // Assert
       const expected = new Matrix3().setTranslation( new Vector2( 3, 5 ) );
@@ -39,11 +35,9 @@ describe( 'ButtonControl', (): void => {
       buttonObject.buttonShape = buttonShape;
 
       const targetTransformation = new Matrix3().setIdentity();
-      const context = new TestContext();
-      const application = new Application( context );
 
       // Act
-      const buttonControl = new ButtonControl( buttonObject, targetTransformation, application );
+      const buttonControl = new ButtonControl( buttonObject, targetTransformation );
 
       // Assert
       expect( buttonControl.children.length ).to.equal( 1 );
@@ -59,11 +53,9 @@ describe( 'ButtonControl', (): void => {
       buttonObject.anchor = anchorPoint;
 
       const targetTransformation = new Matrix3().setIdentity();
-      const context = new TestContext();
-      const application = new Application( context );
 
       // Act
-      const buttonControl = new ButtonControl( buttonObject, targetTransformation, application );
+      const buttonControl = new ButtonControl( buttonObject, targetTransformation );
 
       // Assert
       expect( buttonControl.children.length ).to.equal( 1 );
@@ -81,10 +73,8 @@ describe( 'ButtonControl', (): void => {
       buttonObject.anchor = anchorPoint;
 
       const targetTransformation = new Matrix3().setTranslation( new Vector2( 2, 3 ) );
-      const context = new TestContext();
-      const application = new Application( context );
 
-      const buttonControl = new ButtonControl( buttonObject, targetTransformation, application );
+      const buttonControl = new ButtonControl( buttonObject, targetTransformation );
 
       // Act
       buttonControl.click();
