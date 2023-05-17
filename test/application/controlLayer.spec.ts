@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { spy } from 'sinon';
 
 import { View } from '@daign/2d-pipeline';
 import { Vector2 } from '@daign/math';
@@ -25,9 +26,23 @@ describe( 'ControlLayer', (): void => {
       // Assert
       expect( ( controlLayer as any ).application ).to.equal( application );
     } );
+
+    it( 'should call redrawControls when update manager emits signal', (): void => {
+      // Arrange
+      const context = new TestContext();
+      const application = new Application( context );
+      const controlLayer = new ControlLayer( application );
+      const redrawControlsSpy = spy( controlLayer as any, 'redrawControls' );
+
+      // Act
+      application.updateManager.redrawControlsSignal.emit();
+
+      // Assert
+      expect( redrawControlsSpy.calledOnce ).to.be.true;
+    } );
   } );
 
-  describe( 'createControls', (): void => {
+  describe( 'redrawControls', (): void => {
     it( 'should attach the node returned from the active object', (): void => {
       // Arrange
       const context = new TestContext();
@@ -45,14 +60,14 @@ describe( 'ControlLayer', (): void => {
       application.selectionManager.setSelection( controlObject, null );
 
       // Act
-      controlLayer.createControls();
+      ( controlLayer as any ).redrawControls();
 
       // Assert
       expect( controlLayer.children.length ).to.equal( 1 );
 
       // Act
       application.selectionManager.setSelection( null, null );
-      controlLayer.createControls();
+      ( controlLayer as any ).redrawControls();
 
       // Assert
       expect( controlLayer.children.length ).to.equal( 0 );
@@ -73,12 +88,12 @@ describe( 'ControlLayer', (): void => {
       application.drawingLayer.appendChild( controlObject );
 
       application.selectionManager.setSelection( controlObject, null );
-      controlLayer.createControls();
+      ( controlLayer as any ).redrawControls();
       expect( controlLayer.children.length ).to.equal( 1 );
 
       // Act
       application.selectionManager.setSelection( null, null );
-      controlLayer.createControls();
+      ( controlLayer as any ).redrawControls();
 
       // Assert
       expect( controlLayer.children.length ).to.equal( 0 );

@@ -82,6 +82,6 @@ export class Viewport extends Group {
     this.scaleTransform.scaling.copy( scaling );
     this.translateTransform.translation.copy( translation );
 
-    this.application.updateManager.viewportInputEvent.invoke();
+    this.application.updateManager.redrawSignal.emit();
   }
 }

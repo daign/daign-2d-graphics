@@ -33,6 +33,7 @@ export class Application extends Group {
     super();
 
     this.selectionManager = new SelectionManager();
+    this.updateManager = new UpdateManager();
 
     if ( interactive ) {
       // If interactive then use the InteractiveViewPort and ControlLayer.
@@ -40,16 +41,11 @@ export class Application extends Group {
       this.appendChild( this.drawingLayer );
       this.controlLayer = new ControlLayer( this );
       this.appendChild( this.controlLayer );
-
-
     } else {
       // If not interactive then use the normal Viewport and no ControlLayer.
       this.drawingLayer = new Viewport( context, this );
       this.appendChild( this.drawingLayer );
     }
-
-    this.updateManager = new UpdateManager( this.selectionManager, this.controlLayer,
-      this.drawingLayer );
   }
 
   /**

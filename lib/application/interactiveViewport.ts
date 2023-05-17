@@ -139,6 +139,7 @@ export class InteractiveViewport extends Viewport {
       // Define action to deactivate element.
       handle.clicked = (): void => {
         this.application.selectionManager.setSelection( null, null );
+        this.application.updateManager.redrawSignal.emit();
       };
 
       // Define zoom action.

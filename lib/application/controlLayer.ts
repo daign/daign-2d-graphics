@@ -16,12 +16,17 @@ export class ControlLayer extends Group {
     super();
 
     this.baseClass = 'control-layer';
+
+    // Subscribe to the update manager to know when to redraw the controls.
+    this.application.updateManager.redrawControlsSignal.setObserver( (): void => {
+      this.redrawControls();
+    } )
   }
 
   /**
    * Create the control elements for the active control object.
    */
-  public createControls(): void {
+  private redrawControls(): void {
     this.clearChildren();
 
     const activeObject = this.application.selectionManager.activeObject;

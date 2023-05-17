@@ -231,7 +231,7 @@ describe( 'ControlPoint', (): void => {
       expect( controlObject.points.getElement( 0 )!.equals( new Vector2( 3, 6 ) ) ).to.be.true;
     } );
 
-    it( 'should invoke the redraw event when points are modified', (): void => {
+    it( 'should emit the redraw signal only once when multiple points are modified', (): void => {
       // Arrange
       const context = new TestContext();
       const application = new Application( context );
@@ -259,13 +259,13 @@ describe( 'ControlPoint', (): void => {
       expect( controlPoint.center.equals( points[ 0 ] ) ).to.be.true;
       controlPoint.snap();
 
-      const redrawSpy = spy( application.updateManager.redrawEvent, 'invoke' );
+      const redrawSpy = spy( application.updateManager.redrawSignal, 'emit' );
 
       // Act
       controlPoint.drag( new Vector2( 2, 4 ) );
 
       // Assert
-      expect( redrawSpy.callCount ).to.equal( 3 );
+      expect( redrawSpy.callCount ).to.equal( 1 );
       expect( controlObject.points.getElement( 0 )!.equals( new Vector2( 3, 6 ) ) ).to.be.true;
       expect( controlObject.points.getElement( 1 )!.equals( new Vector2( 5, 8 ) ) ).to.be.true;
       expect( controlObject.points.getElement( 2 )!.equals( new Vector2( 7, 10 ) ) ).to.be.true;
