@@ -45,4 +45,19 @@ describe( 'Application', (): void => {
       expect( spyFitToContent.calledWith( 2 ) ).to.be.true;
     } );
   } );
+
+  describe( 'redraw', (): void => {
+    it( 'should call redraw on update manager', (): void => {
+      // Arrange
+      const context = new TestContext();
+      const application = new Application( context );
+      const redrawSpy = spy( application.updateManager, 'redraw' );
+
+      // Act
+      application.redraw();
+
+      // Assert
+      expect( redrawSpy.calledOnce ).to.be.true;
+    } );
+  } );
 } );

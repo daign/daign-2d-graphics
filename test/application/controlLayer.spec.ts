@@ -35,7 +35,7 @@ describe( 'ControlLayer', (): void => {
       const redrawControlsSpy = spy( controlLayer as any, 'redrawControls' );
 
       // Act
-      application.updateManager.redrawControlsSignal.emit();
+      application.updateManager.redraw();
 
       // Assert
       expect( redrawControlsSpy.calledOnce ).to.be.true;

@@ -259,7 +259,7 @@ describe( 'ControlPoint', (): void => {
       expect( controlPoint.center.equals( points[ 0 ] ) ).to.be.true;
       controlPoint.snap();
 
-      const redrawSpy = spy( application.updateManager.redrawSignal, 'emit' );
+      const redrawSpy = spy( application.updateManager, 'redraw' );
 
       // Act
       controlPoint.drag( new Vector2( 2, 4 ) );

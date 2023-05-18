@@ -112,6 +112,6 @@ export class ControlPoint extends Group {
 
     this.calculateOffset();
 
-    this.application.updateManager.redrawSignal.emit();
+    this.application.redraw();
   }
 }

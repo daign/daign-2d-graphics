@@ -203,7 +203,7 @@ describe( 'InteractiveViewport', (): void => {
       const dragEvent = new MockEvent().setClientPoint( 1, 10 );
       const endEvent = new MockEvent().setClientPoint( 2, 10 );
 
-      const redrawSpy = spy( application.updateManager.redrawSignal, 'emit' );
+      const redrawSpy = spy( application.updateManager, 'redraw' );
 
       // Act
       domNode.sendEvent( 'mousedown', startEvent );
@@ -390,7 +390,7 @@ describe( 'InteractiveViewport', (): void => {
       const controlObject = new TestObject();
       application.selectionManager.setSelection( controlObject, null );
 
-      const redrawSpy = spy( application.updateManager.redrawSignal, 'emit' );
+      const redrawSpy = spy( application.updateManager, 'redraw' );
 
       const clickEvent = new MockEvent();
       clickEvent.setOffsetPoint( 100, 100 );

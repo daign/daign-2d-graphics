@@ -55,4 +55,11 @@ export class Application extends Group {
   public fitToContent( margin?: number ): void {
     this.drawingLayer.fitToContent( margin );
   }
+
+  /**
+   * Redraw and render the application.
+   */
+  public redraw(): void {
+    this.updateManager.redraw();
+  }
 }

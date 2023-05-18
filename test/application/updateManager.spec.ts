@@ -7,56 +7,60 @@ import { Application, UpdateManager } from '../../lib';
 import { TestContext } from '../testContext';
 
 describe( 'UpdateManager', (): void => {
-  describe( 'constructor', (): void => {
-    it( 'should emit a graphic update event when the redraw signal is received', (): void => {
+  describe( 'subscribeToRedrawEvent', (): void => {
+    it( 'should register a callback that gets informed about redraw events', (): void => {
       // Arrange
       const context = new TestContext();
       const application = new Application( context, true );
       const view = new View();
       view.mountNode( application );
-
       const updateManager = new UpdateManager();
-      const graphicUpdateSpy = spy( updateManager.graphicUpdateEvent, 'emit' );
 
       // Act
-      updateManager.redrawSignal.emit();
+      const redrawSpy = spy();
+      updateManager.subscribeToRedrawEvent( redrawSpy );
+      updateManager.redraw();
 
       // Assert
-      expect( graphicUpdateSpy.calledOnce ).to.be.true;
+      expect( redrawSpy.calledOnce ).to.be.true;
     } );
+  } );
 
-    it( 'should emit a redraw controls signal when the redraw signal is received', (): void => {
+  describe( 'setRedrawControlsFunction', (): void => {
+    it( 'should register a callback that gets informed when to redraw the controls', (): void => {
       // Arrange
       const context = new TestContext();
       const application = new Application( context, true );
       const view = new View();
       view.mountNode( application );
-
       const updateManager = new UpdateManager();
-      const redrawControlsSpy = spy( updateManager.redrawControlsSignal, 'emit' );
 
       // Act
-      updateManager.redrawSignal.emit();
+      const redrawControlsSpy = spy();
+      updateManager.setRedrawControlsFunction( redrawControlsSpy );
+      updateManager.redraw();
 
       // Assert
       expect( redrawControlsSpy.calledOnce ).to.be.true;
     } );
+  } );
 
-    it( 'should emit a render signal when the redraw signal is received', (): void => {
+  describe( 'setRenderFunction', (): void => {
+    it( 'should register a callback that gets informed when to render the graphic', (): void => {
       // Arrange
       const context = new TestContext();
       const application = new Application( context, true );
       const view = new View();
       view.mountNode( application );
-
       const updateManager = new UpdateManager();
-      const renderSignalSpy = spy( updateManager.renderSignal, 'emit' );
 
       // Act
-      updateManager.redrawSignal.emit();
+      const renderSpy = spy();
+      updateManager.setRenderFunction( renderSpy );
+      updateManager.redraw();
 
       // Assert
-      expect( renderSignalSpy.calledOnce ).to.be.true;
+      expect( renderSpy.calledOnce ).to.be.true;
     } );
   } );
 } );
