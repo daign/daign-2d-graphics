@@ -11,14 +11,20 @@ daign-2d-graphics lets you define 2d-graphics that can be modified through contr
 The final graphics can be output to interactive web applications with technologies like SVG or Canvas,
 but other output formats like [Ti*k*Z][tikz-url] code can also be defined.
 
+## Packages ##
+
+daign-2d-graphics is the main package of several npm packages that work together to build this project.
+[Learn more about the packages.](./docs/packages.md)
+
 ## Demo ##
 
 Here is a repository with [demo applications][demo-url].
 
 ## Documentation ##
 
-daign-2d-graphics is the main package of several npm packages that work together to build this project.
-[Learn more about the packages.](./docs/packages.md)
++ [Layers](./docs/layers.md)
++ [Control objects](./docs/control-objects.md)
++ [Redraw cycle](./docs/redraw-cycle.md)
 
 ## Installation
 
