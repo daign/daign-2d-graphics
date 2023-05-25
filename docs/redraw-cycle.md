@@ -32,25 +32,43 @@ and render the application only once when you are finished.
 ### Automatic redraws
 
 Automatic redraws happen on the following predefined user actions:
-1. Selecting a control object.
-2. Selecting a control point.
-3. [Dragging a control point](./control-objects.md#control-point-changes).
-4. Panning or zooming the view.
-5. Clicking in an empty area to deselect.
+* Selecting a control object.
+* Selecting a control point.
+* [Dragging a control point](./control-objects.md#control-point-changes).
+* Panning or zooming the view.
+* Clicking in an empty area to deselect.
 
 ### Manual redraws
 
 In the following cases you have to call the redraw manually if needed:
-1. In the callback of a button object.
-2. When changing the selection programmatically.
-3. When changing the view programmatically, for example when calling fitToContent().
-4. After making changes to the document, e.g. appending or removing nodes from the document tree,
+* In the callback of a button object.
+* When changing the selection programmatically.
+* When changing the view programmatically, for example when calling fitToContent().
+* After making changes to the document, e.g. appending or removing nodes from the document tree,
 changing transformations, changing style selectors.
 
-## Reacting to selection changes
+Make sure to always call the redraw at the end of the top most function
+that executes your action, and only there.
+If you request a redraw from within a method that redraws or updates a component,
+then this can lead to infinite circular redraws,
+when the same component also updates on other actions.
 
-Normally you don't act on selection changes specifically.
-If your components should react to actions that they are not directly affected by,
-they should subscribe to the redraw event with the updateMananger.subscribeToRedrawEvent() method.
+## Events
 
-However it is also possible to subscribe to the selection manager if needed.
+There are two events that can be useful for updating components.
+
+### Selection changes
+
+You can subscribe to the selection manager
+in case a component should update when the selection changes.
+Since the action which initiated the selection change is responsible
+for requesting a redraw,
+you should not request another redraw in response to a selection change event.
+
+### The redraw event
+
+Components which are not linked directly to react on changes in other components,
+and which also depend on more than just selection changes,
+can subscribe to the redraw event by calling the updateMananger.subscribeToRedrawEvent() method.
+This means they will be informed first for each redraw that is requested.
+So in other words they will update on every possible change in the application.
