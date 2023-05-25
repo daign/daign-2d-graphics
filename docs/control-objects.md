@@ -36,3 +36,30 @@ they are written back to the control object.
 This will then trigger a redraw of the control object.
 
 Afterwards the [redraw of the application](./redraw-cycle.md) is automatically executed.
+
+```mermaid
+sequenceDiagram
+    actor A as User
+    participant B as ControlObject
+    participant C as ControlPoint
+    participant D as ControlModifier
+    participant E as Application
+
+    A ->> B: click
+    activate B
+    B ->> C: redrawControlObjects
+    deactivate B
+
+    A ->> C: drag
+    activate C
+    C ->> D: modifyPoints
+    activate D
+    D ->> C: return modified points
+    deactivate D
+    C ->> B: set modified points
+    activate B
+    B ->> B: redraw
+    deactivate B
+    C ->> E: redraw
+    deactivate C
+```
