@@ -368,4 +368,95 @@ export class GraphicStyle implements IStyleDeclaration {
       this.cursor = declaration.cursor;
     }
   }
+
+  /**
+   * Return the style declaration as string.
+   */
+  public printStyle(): string {
+    const attributes = [];
+
+    if ( this.fill ) {
+      attributes.push( `fill: ${this.fill}` );
+    }
+    if ( this.fillOpacity ) {
+      attributes.push( `fill-opacity: ${this.fillOpacity}` );
+    }
+    if ( this.fillRule ) {
+      attributes.push( `fill-rule: ${this.fillRule}` );
+    }
+    if ( this.stroke ) {
+      attributes.push( `stroke: ${this.stroke}` );
+    }
+    if ( this.strokeWidth ) {
+      attributes.push( `stroke-width: ${this.strokeWidth}` );
+    }
+    if ( this.strokeOpacity ) {
+      attributes.push( `stroke-opacity: ${this.strokeOpacity}` );
+    }
+    if ( this.strokeLinecap ) {
+      attributes.push( `stroke-linecap: ${this.strokeLinecap}` );
+    }
+    if ( this.strokeLinejoin ) {
+      attributes.push( `stroke-linejoin: ${this.strokeLinejoin}` );
+    }
+    if ( this.strokeMiterlimit ) {
+      attributes.push( `stroke-miterlimit: ${this.strokeMiterlimit}` );
+    }
+    if ( this.strokeDasharray ) {
+      attributes.push( `stroke-dasharray: ${this.strokeDasharray}` );
+    }
+    if ( this.strokeDashoffset ) {
+      attributes.push( `stroke-dashoffset: ${this.strokeDashoffset}` );
+    }
+    if ( this.vectorEffect ) {
+      attributes.push( `vector-effect: ${this.vectorEffect}` );
+    }
+    if ( this.display ) {
+      attributes.push( `display: ${this.display}` );
+    }
+    if ( this.visibility ) {
+      attributes.push( `visibility: ${this.visibility}` );
+    }
+    if ( this.opacity ) {
+      attributes.push( `opacity: ${this.opacity}` );
+    }
+    if ( this.paintOrder ) {
+      attributes.push( `paint-order: ${this.paintOrder}` );
+    }
+    if ( this.fontFamily ) {
+      attributes.push( `font-family: ${this.fontFamily}` );
+    }
+    if ( this.fontSize ) {
+      attributes.push( `font-size: ${this.fontSize}` );
+    }
+    if ( this.fontStyle ) {
+      attributes.push( `font-style: ${this.fontStyle}` );
+    }
+    if ( this.fontVariant ) {
+      attributes.push( `font-variant: ${this.fontVariant}` );
+    }
+    if ( this.fontWeight ) {
+      attributes.push( `font-weight: ${this.fontWeight}` );
+    }
+    if ( this.fontStretch ) {
+      attributes.push( `font-stretch: ${this.fontStretch}` );
+    }
+    if ( this.letterSpacing ) {
+      attributes.push( `letter-spacing: ${this.letterSpacing}` );
+    }
+    if ( this.wordSpacing ) {
+      attributes.push( `word-spacing: ${this.wordSpacing}` );
+    }
+    if ( this.textDecoration ) {
+      attributes.push( `text-decoration: ${this.textDecoration}` );
+    }
+    if ( this.pointerEvents ) {
+      attributes.push( `pointer-events: ${this.pointerEvents}` );
+    }
+    if ( this.cursor ) {
+      attributes.push( `cursor: ${this.cursor}` );
+    }
+
+    return attributes.join( ', ' );
+  }
 }

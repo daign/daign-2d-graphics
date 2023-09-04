@@ -223,4 +223,39 @@ describe( 'GraphicStyle', (): void => {
       expect( targetStyle.strokeWidth ).to.equal( 6 );
     } );
   } );
+
+  describe( 'printStyle', (): void => {
+    it( 'should return the style declaration as string', (): void => {
+      // Arrange
+      const style = new GraphicStyle( 'black', 0.9, 'evenodd', 'blue', 2, 0.8, 'square',
+        'bevel', 4, '1,2,3', 10, 'non-scaling-stroke', 'block', 'hidden', 0.7, 'normal',
+        'sans-serif', '12px', 'italic', 'small-caps', 'bold', 'ultra-condensed', '2px', '3px',
+        'line-through', 'fill', 'pointer' );
+
+      // Act
+      const text = style.printStyle();
+
+      // Assert
+      expect( text ).to.equal(
+`fill: black, fill-opacity: 0.9, fill-rule: evenodd, stroke: blue, stroke-width: 2, \
+stroke-opacity: 0.8, stroke-linecap: square, stroke-linejoin: bevel, stroke-miterlimit: 4, \
+stroke-dasharray: 1,2,3, stroke-dashoffset: 10, vector-effect: non-scaling-stroke, display: block, \
+visibility: hidden, opacity: 0.7, paint-order: normal, font-family: sans-serif, font-size: 12px, \
+font-style: italic, font-variant: small-caps, font-weight: bold, font-stretch: ultra-condensed, \
+letter-spacing: 2px, word-spacing: 3px, text-decoration: line-through, pointer-events: fill, \
+cursor: pointer`
+      );
+    } );
+
+    it( 'should return empty string for empty style', (): void => {
+      // Arrange
+      const style = new GraphicStyle();
+
+      // Act
+      const text = style.printStyle();
+
+      // Assert
+      expect( text ).to.equal( '' );
+    } );
+  } );
 } );
