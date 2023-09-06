@@ -237,12 +237,12 @@ describe( 'GraphicStyle', (): void => {
 
       // Assert
       expect( text ).to.equal(
-`fill: black, fill-opacity: 0.9, fill-rule: evenodd, stroke: blue, stroke-width: 2, \
-stroke-opacity: 0.8, stroke-linecap: square, stroke-linejoin: bevel, stroke-miterlimit: 4, \
-stroke-dasharray: 1,2,3, stroke-dashoffset: 10, vector-effect: non-scaling-stroke, display: block, \
-visibility: hidden, opacity: 0.7, paint-order: normal, font-family: sans-serif, font-size: 12px, \
-font-style: italic, font-variant: small-caps, font-weight: bold, font-stretch: ultra-condensed, \
-letter-spacing: 2px, word-spacing: 3px, text-decoration: line-through, pointer-events: fill, \
+`fill: black; fill-opacity: 0.9; fill-rule: evenodd; stroke: blue; stroke-width: 2; \
+stroke-opacity: 0.8; stroke-linecap: square; stroke-linejoin: bevel; stroke-miterlimit: 4; \
+stroke-dasharray: 1,2,3; stroke-dashoffset: 10; vector-effect: non-scaling-stroke; display: block; \
+visibility: hidden; opacity: 0.7; paint-order: normal; font-family: sans-serif; font-size: 12px; \
+font-style: italic; font-variant: small-caps; font-weight: bold; font-stretch: ultra-condensed; \
+letter-spacing: 2px; word-spacing: 3px; text-decoration: line-through; pointer-events: fill; \
 cursor: pointer`
       );
     } );

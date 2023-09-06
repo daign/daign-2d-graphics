@@ -370,7 +370,8 @@ export class GraphicStyle implements IStyleDeclaration {
   }
 
   /**
-   * Return the style declaration as string.
+   * Return the concatenated style declaration as string.
+   * @returns The concatenated style declaration as string.
    */
   public printStyle(): string {
     const attributes = [];
@@ -457,6 +458,6 @@ export class GraphicStyle implements IStyleDeclaration {
       attributes.push( `cursor: ${this.cursor}` );
     }
 
-    return attributes.join( ', ' );
+    return attributes.join( '; ' );
   }
 }

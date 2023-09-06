@@ -11,7 +11,7 @@ export abstract class StyledGraphicNode extends GraphicNode {
   // Array of points that define the element.
   public points: Vector2Array = new Vector2Array();
 
-  // Class names assinged to the element.
+  // Class names assigned to the element.
   private classNames: StringArray = new StringArray();
 
   // Style selector object containing all class names of the element.
