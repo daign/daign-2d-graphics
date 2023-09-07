@@ -9,3 +9,4 @@ export { Text } from './text';
 export { TwoPointCircle } from './twoPointCircle';
 export { TwoPointImage } from './twoPointImage';
 export { TwoPointRectangle } from './twoPointRectangle';
+export { UseElement } from './useElement';
