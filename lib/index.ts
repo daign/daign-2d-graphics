@@ -13,6 +13,7 @@ export { Viewport } from './application/viewport';
 export { FixedRadiusCircle } from './basic-elements/fixedRadiusCircle';
 export { Group } from './basic-elements/group';
 export { Line } from './basic-elements/line';
+export { Polygon } from './basic-elements/polygon';
 export { Polyline } from './basic-elements/polyline';
 export { QuadraticCurve } from './basic-elements/quadraticCurve';
 export { ScalableText } from './basic-elements/scalableText';
