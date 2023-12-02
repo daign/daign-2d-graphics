@@ -1,6 +1,7 @@
 export { FixedRadiusCircle } from './fixedRadiusCircle';
 export { Group } from './group';
 export { Line } from './line';
+export { Mask } from './mask';
 export { Polygon } from './polygon';
 export { Polyline } from './polyline';
 export { QuadraticCurve } from './quadraticCurve';

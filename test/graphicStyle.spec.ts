@@ -31,9 +31,9 @@ describe( 'GraphicStyle', (): void => {
     it( 'should set the properties', (): void => {
       // Act
       const style = new GraphicStyle( 'black', 0.9, 'evenodd', 'blue', 2, 0.8, 'square', 'bevel', 4,
-        '1,2,3', 10, 'non-scaling-stroke', 'block', 'hidden', 0.7, 'normal', 'sans-serif', '12px',
-        'italic', 'small-caps', 'bold', 'ultra-condensed', '2px', '3px', 'line-through', 'fill',
-        'pointer' );
+        '1,2,3', 10, 'non-scaling-stroke', 'block', 'hidden', 0.7, 'normal', 'url(#mask)',
+        'sans-serif', '12px', 'italic', 'small-caps', 'bold', 'ultra-condensed', '2px', '3px',
+        'line-through', 'fill', 'pointer' );
 
       // Assert
       expect( style.fill ).to.equal( 'black' );
@@ -52,6 +52,7 @@ describe( 'GraphicStyle', (): void => {
       expect( style.visibility ).to.equal( 'hidden' );
       expect( style.opacity ).to.equal( 0.7 );
       expect( style.paintOrder ).to.equal( 'normal' );
+      expect( style.mask ).to.equal( 'url(#mask)' );
       expect( style.fontFamily ).to.equal( 'sans-serif' );
       expect( style.fontSize ).to.equal( '12px' );
       expect( style.fontStyle ).to.equal( 'italic' );
@@ -90,6 +91,7 @@ describe( 'GraphicStyle', (): void => {
       style.parseAttribute( 'display', 'block' );
       style.parseAttribute( 'visibility', 'hidden' );
       style.parseAttribute( 'paint-order', 'normal' );
+      style.parseAttribute( 'mask', 'url(#mask)' );
       style.parseAttribute( 'font-family', 'sans-serif' );
       style.parseAttribute( 'font-size', '12px' );
       style.parseAttribute( 'font-style', 'italic' );
@@ -114,6 +116,7 @@ describe( 'GraphicStyle', (): void => {
       expect( style.display ).to.equal( 'block' );
       expect( style.visibility ).to.equal( 'hidden' );
       expect( style.paintOrder ).to.equal( 'normal' );
+      expect( style.mask ).to.equal( 'url(#mask)' );
       expect( style.fontFamily ).to.equal( 'sans-serif' );
       expect( style.fontSize ).to.equal( '12px' );
       expect( style.fontStyle ).to.equal( 'italic' );
@@ -155,8 +158,8 @@ describe( 'GraphicStyle', (): void => {
       const style = new GraphicStyle();
       const sourceStyle = new GraphicStyle( 'black', 0.9, 'evenodd', 'blue', 2, 0.8, 'square',
         'bevel', 4, '1,2,3', 10, 'non-scaling-stroke', 'block', 'hidden', 0.7, 'normal',
-        'sans-serif', '12px', 'italic', 'small-caps', 'bold', 'ultra-condensed', '2px', '3px',
-        'line-through', 'fill', 'pointer' );
+        'url(#mask)', 'sans-serif', '12px', 'italic', 'small-caps', 'bold', 'ultra-condensed',
+        '2px', '3px', 'line-through', 'fill', 'pointer' );
 
       // Act
       style.complementWith( sourceStyle );
@@ -178,6 +181,7 @@ describe( 'GraphicStyle', (): void => {
       expect( style.visibility ).to.equal( 'hidden' );
       expect( style.opacity ).to.equal( 0.7 );
       expect( style.paintOrder ).to.equal( 'normal' );
+      expect( style.mask ).to.equal( 'url(#mask)' );
       expect( style.fontFamily ).to.equal( 'sans-serif' );
       expect( style.fontSize ).to.equal( '12px' );
       expect( style.fontStyle ).to.equal( 'italic' );
@@ -195,8 +199,8 @@ describe( 'GraphicStyle', (): void => {
       // Arrange
       const targetStyle = new GraphicStyle( 'red', 0.9, 'evenodd', 'yellow', 6, 0.8, 'square',
         'bevel', 4, '1,2,3', 10, 'non-scaling-stroke', 'block', 'hidden', 0.7, 'normal',
-        'sans-serif', '12px', 'italic', 'small-caps', 'bold', 'ultra-condensed', '2px', '3px',
-        'line-through', 'fill', 'pointer' );
+        'url(#mask)', 'sans-serif', '12px', 'italic', 'small-caps', 'bold', 'ultra-condensed',
+        '2px', '3px', 'line-through', 'fill', 'pointer' );
       const sourceStyle = new GraphicStyle( 'black', undefined, undefined, 'blue', 2 );
 
       // Act
@@ -229,8 +233,8 @@ describe( 'GraphicStyle', (): void => {
       // Arrange
       const style = new GraphicStyle( 'black', 0.9, 'evenodd', 'blue', 2, 0.8, 'square',
         'bevel', 4, '1,2,3', 10, 'non-scaling-stroke', 'block', 'hidden', 0.7, 'normal',
-        'sans-serif', '12px', 'italic', 'small-caps', 'bold', 'ultra-condensed', '2px', '3px',
-        'line-through', 'fill', 'pointer' );
+        'url(#mask)', 'sans-serif', '12px', 'italic', 'small-caps', 'bold', 'ultra-condensed',
+        '2px', '3px', 'line-through', 'fill', 'pointer' );
 
       // Act
       const text = style.printStyle();
@@ -240,10 +244,10 @@ describe( 'GraphicStyle', (): void => {
 `fill: black; fill-opacity: 0.9; fill-rule: evenodd; stroke: blue; stroke-width: 2; \
 stroke-opacity: 0.8; stroke-linecap: square; stroke-linejoin: bevel; stroke-miterlimit: 4; \
 stroke-dasharray: 1,2,3; stroke-dashoffset: 10; vector-effect: non-scaling-stroke; display: block; \
-visibility: hidden; opacity: 0.7; paint-order: normal; font-family: sans-serif; font-size: 12px; \
-font-style: italic; font-variant: small-caps; font-weight: bold; font-stretch: ultra-condensed; \
-letter-spacing: 2px; word-spacing: 3px; text-decoration: line-through; pointer-events: fill; \
-cursor: pointer`
+visibility: hidden; opacity: 0.7; paint-order: normal; mask: url(#mask); font-family: sans-serif; \
+font-size: 12px; font-style: italic; font-variant: small-caps; font-weight: bold; \
+font-stretch: ultra-condensed; letter-spacing: 2px; word-spacing: 3px; \
+text-decoration: line-through; pointer-events: fill; cursor: pointer`
       );
     } );
 

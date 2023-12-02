@@ -25,6 +25,7 @@ export class GraphicStyle implements IStyleDeclaration {
   public visibility: string | null = null;
   public opacity: number | null = null;
   public paintOrder: string | null = null;
+  public mask: string | null = null;
 
   // Text.
   public fontFamily: string | null = null;
@@ -62,6 +63,7 @@ export class GraphicStyle implements IStyleDeclaration {
       this.visibility === null &&
       this.opacity === null &&
       this.paintOrder === null &&
+      this.mask === null &&
       this.fontFamily === null &&
       this.fontSize === null &&
       this.fontStyle === null &&
@@ -94,6 +96,7 @@ export class GraphicStyle implements IStyleDeclaration {
    * @param visibility - Optional.
    * @param opacity - Optional.
    * @param paintOrder - Optional.
+   * @param mask - Optional.
    * @param fontFamily - Optional.
    * @param fontSize - Optional.
    * @param fontStyle - Optional.
@@ -123,6 +126,7 @@ export class GraphicStyle implements IStyleDeclaration {
     visibility?: string,
     opacity?: number,
     paintOrder?: string,
+    mask?: string,
     fontFamily?: string,
     fontSize?: string,
     fontStyle?: string,
@@ -182,6 +186,9 @@ export class GraphicStyle implements IStyleDeclaration {
     }
     if ( paintOrder ) {
       this.paintOrder = paintOrder;
+    }
+    if ( mask ) {
+      this.mask = mask;
     }
     if ( fontFamily ) {
       this.fontFamily = fontFamily;
@@ -256,6 +263,8 @@ export class GraphicStyle implements IStyleDeclaration {
       this.opacity = parseFloat( value );
     } else if ( name === 'paint-order' ) {
       this.paintOrder = value;
+    } else if ( name === 'mask' ) {
+      this.mask = value;
     } else if ( name === 'font-family' ) {
       this.fontFamily = value;
     } else if ( name === 'font-size' ) {
@@ -333,6 +342,9 @@ export class GraphicStyle implements IStyleDeclaration {
     }
     if ( this.paintOrder === null ) {
       this.paintOrder = declaration.paintOrder;
+    }
+    if ( this.mask === null ) {
+      this.mask = declaration.mask;
     }
     if ( this.fontFamily === null ) {
       this.fontFamily = declaration.fontFamily;
@@ -423,6 +435,9 @@ export class GraphicStyle implements IStyleDeclaration {
     }
     if ( this.paintOrder ) {
       attributes.push( `paint-order: ${this.paintOrder}` );
+    }
+    if ( this.mask ) {
+      attributes.push( `mask: ${this.mask}` );
     }
     if ( this.fontFamily ) {
       attributes.push( `font-family: ${this.fontFamily}` );
