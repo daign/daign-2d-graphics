@@ -13,6 +13,23 @@ class TestNode extends StyledGraphicNode {
 }
 
 describe( 'StyledGraphicNode', (): void => {
+  describe( 'properties', (): void => {
+    it( 'should set and get properties', (): void => {
+      // Arrange
+      const node = new TestNode();
+
+      // Act
+      node.id = 'SomeId';
+      node.mask = 'SomeMask';
+      node.clipPath = 'SomeClipPath';
+
+      // Assert
+      expect( node.id ).to.equal( 'SomeId' );
+      expect( node.mask ).to.equal( 'SomeMask' );
+      expect( node.clipPath ).to.equal( 'SomeClipPath' );
+    } );
+  } );
+
   describe( 'setter baseClass', (): void => {
     it( 'should add the base class to the array of class names', (): void => {
       // Arrange

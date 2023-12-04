@@ -10,6 +10,7 @@ export { SelectionManager } from './application/selectionManager';
 export { UpdateManager } from './application/updateManager';
 export { Viewport } from './application/viewport';
 
+export { ClipPath } from './basic-elements/clipPath';
 export { FixedRadiusCircle } from './basic-elements/fixedRadiusCircle';
 export { Group } from './basic-elements/group';
 export { Line } from './basic-elements/line';
@@ -19,9 +20,11 @@ export { Polyline } from './basic-elements/polyline';
 export { QuadraticCurve } from './basic-elements/quadraticCurve';
 export { ScalableText } from './basic-elements/scalableText';
 export { SinglePointElement } from './basic-elements/singlePointElement';
+export { SymbolElement } from './basic-elements/symbolElement';
 export { Text } from './basic-elements/text';
 export { TwoPointCircle } from './basic-elements/twoPointCircle';
 export { TwoPointImage } from './basic-elements/twoPointImage';
+export { TwoPointPattern } from './basic-elements/twoPointPattern';
 export { TwoPointRectangle } from './basic-elements/twoPointRectangle';
 export { UseElement } from './basic-elements/useElement';
 

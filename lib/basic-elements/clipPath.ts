@@ -4,20 +4,20 @@ import { GraphicNode } from '@daign/2d-pipeline';
 import { StyledGraphicNode } from '../styledGraphicNode';
 
 /**
- * Class for a mask element.
+ * Class for a clip path element.
  */
-export class Mask extends StyledGraphicNode {
+export class ClipPath extends StyledGraphicNode {
   /**
    * Constructor.
    */
   public constructor() {
     super();
 
-    this.baseClass = 'mask';
+    this.baseClass = 'clip-path';
   }
 
   /**
-   * Get the bounding box of all child elements of the mask.
+   * Get the bounding box of all child elements of the clip path.
    * @returns The bounding box.
    */
   public getBox(): Box2 {

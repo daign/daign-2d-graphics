@@ -1,3 +1,4 @@
+export { ClipPath } from './clipPath';
 export { FixedRadiusCircle } from './fixedRadiusCircle';
 export { Group } from './group';
 export { Line } from './line';
@@ -7,8 +8,10 @@ export { Polyline } from './polyline';
 export { QuadraticCurve } from './quadraticCurve';
 export { ScalableText } from './scalableText';
 export { SinglePointElement } from './singlePointElement';
+export { SymbolElement } from './symbolElement';
 export { Text } from './text';
 export { TwoPointCircle } from './twoPointCircle';
 export { TwoPointImage } from './twoPointImage';
+export { TwoPointPattern } from './twoPointPattern';
 export { TwoPointRectangle } from './twoPointRectangle';
 export { UseElement } from './useElement';

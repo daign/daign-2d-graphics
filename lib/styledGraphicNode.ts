@@ -20,6 +20,18 @@ export abstract class StyledGraphicNode extends GraphicNode {
   // Style applied directly to the element.
   public elementStyle: GraphicStyle | null = null;
 
+  // Callback to execute when node is clicked.
+  public onclick: ( () => void ) | null = null;
+
+  // ID property.
+  public id: string | null = null;
+
+  // Reference for a mask element to apply to the node.
+  public mask: string | null = null;
+
+  // Reference for a clip path element to apply to the node.
+  public clipPath: string | null = null;
+
   /**
    * Setter for the base class.
    * @param baseClass - The name of the base class.
