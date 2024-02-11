@@ -1,4 +1,4 @@
-import { Vector2 } from '@daign/math';
+import { Box2, Value, Vector2 } from '@daign/math';
 import { NativeScaleTransform, NativeTranslateTransform } from '@daign/2d-pipeline';
 
 import { Group } from '../basic-elements/group';
@@ -19,10 +19,19 @@ export class Viewport extends Group {
   private translateTransform: NativeTranslateTransform = new NativeTranslateTransform();
 
   // Content coordinates at the center of the viewport.
-  protected viewCenter: Vector2 = new Vector2();
+  public viewCenter: Vector2 = new Vector2();
 
   // Scaling of the viewport content.
-  protected viewScale: number = 1;
+  public viewScale: Value = new Value( 1 );
+
+  // Minimum scale.
+  public scaleMin: number = 0.001;
+
+  // Maximum scale.
+  public scaleMax: number = 1000;
+
+  // Area limiting view center movements.
+  public viewCenterLimit: Box2 = new Box2();
 
   /**
    * Constructor.
@@ -38,14 +47,22 @@ export class Viewport extends Group {
     this.context = context;
     this.application = application;
 
-    // Set center of target's drawing space as center.
-    this.viewCenter.copy( context.size ).multiplyScalar( 0.5 );
+    // Initialize with unlimited view center limit.
+    this.viewCenterLimit.makeUnlimited();
 
     // Add the transformations that transform the viewport.
     this.scaleTransform.scaling.set( 1, 1 );
     this.transformation.push( this.translateTransform );
     this.transformation.push( this.scaleTransform );
     this.transformation.push( this.decenteringTransform );
+
+    // Automatically update viewport when center or scale changes.
+    this.viewCenter.subscribeToChanges( (): void => {
+      this.updateViewport();
+    } );
+    this.viewScale.subscribeToChanges( (): void => {
+      this.updateViewport();
+    } );
   }
 
   /**
@@ -60,10 +77,24 @@ export class Viewport extends Group {
     }
 
     const scaling = this.context.size.clone().divide( contentBox.size );
-    // Scaling should be the same in both directions.
-    this.viewScale = Math.min( scaling.x, scaling.y );
+    // Scaling is the same in both directions.
+    // Set silent so that updateViewport can be called once at the end.
+    this.viewScale.setSilent( Math.min( scaling.x, scaling.y ) );
 
-    this.viewCenter.copy( contentBox.min ).add( contentBox.size.clone().multiplyScalar( 0.5 ) );
+    const newCenter = contentBox.min.clone().add( contentBox.size.clone().multiplyScalar( 0.5 ) );
+    this.viewCenter.copySilent( newCenter );
+
+    this.updateViewport();
+  }
+
+  /**
+   * Set view center and scale so that the coordinates translate one-to-one to context coordinates.
+   */
+  public fitToContextSize(): void {
+    // Set center of target's drawing space as center.
+    const newCenter = this.context.size.clone().multiplyScalar( 0.5 );
+    this.viewCenter.copySilent( newCenter );
+    this.viewScale.setSilent( 1 );
 
     this.updateViewport();
   }
@@ -72,10 +103,16 @@ export class Viewport extends Group {
    * Calculate and apply the transformations that result from the view center and scale properties.
    */
   protected updateViewport(): void {
+    // Apply limits to center and scale.
+    const limitedCenter = this.viewCenter.clone().clampInBox( this.viewCenterLimit );
+    this.viewCenter.copySilent( limitedCenter );
+    const limitedScale = this.viewScale.clone().clamp( this.scaleMin, this.scaleMax );
+    this.viewScale.setSilent( limitedScale.x );
+
     // Move the center of the view to (0,0) to keep it unaffected from the scaling.
     const decentering = new Vector2( -this.viewCenter.x, -this.viewCenter.y );
 
-    const scaling = new Vector2( this.viewScale, this.viewScale );
+    const scaling = new Vector2( this.viewScale.x, this.viewScale.x );
     const translation = this.context.size.clone().multiplyScalar( 0.5 );
 
     this.decenteringTransform.translation.copy( decentering );

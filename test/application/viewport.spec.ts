@@ -1,4 +1,5 @@
 import { expect } from 'chai';
+import { spy } from 'sinon';
 
 import { Vector2 } from '@daign/math';
 
@@ -13,20 +14,6 @@ class TestNode extends StyledGraphicNode {
 
 describe( 'Viewport', (): void => {
   describe( 'constructor', (): void => {
-    it( 'should set the view center to the center of the drawing context', (): void => {
-      // Arrange
-      const context = new TestContext();
-      context._size.set( 12, 14 );
-      const application = new Application( context );
-
-      // Act
-      const viewport = new Viewport( context, application );
-
-      // Assert
-      const expectedCenter = new Vector2( 6, 7 );
-      expect( ( viewport as any ).viewCenter.equals( expectedCenter ) ).to.be.true;
-    } );
-
     it( 'should add three transformations', (): void => {
       // Arrange
       const context = new TestContext();
@@ -38,6 +25,36 @@ describe( 'Viewport', (): void => {
 
       // Assert
       expect( viewport.transformation.length ).to.equal( 3 );
+    } );
+
+    it( 'should call updateViewport when view center changes', (): void => {
+      // Arrange
+      const context = new TestContext();
+      context._size.set( 12, 14 );
+      const application = new Application( context );
+      const viewport = new Viewport( context, application );
+
+      // Act
+      const updateViewportSpy = spy( ( viewport as any ), 'updateViewport' );
+      viewport.viewCenter.set( 1, 2 );
+
+      // Assert
+      expect( updateViewportSpy.calledOnce ).to.be.true;
+    } );
+
+    it( 'should call updateViewport when view scale changes', (): void => {
+      // Arrange
+      const context = new TestContext();
+      context._size.set( 12, 14 );
+      const application = new Application( context );
+      const viewport = new Viewport( context, application );
+
+      // Act
+      const updateViewportSpy = spy( ( viewport as any ), 'updateViewport' );
+      viewport.viewScale.x = 4;
+
+      // Assert
+      expect( updateViewportSpy.calledOnce ).to.be.true;
     } );
   } );
 
@@ -61,8 +78,8 @@ describe( 'Viewport', (): void => {
 
       // Assert
       const expectedCenter = new Vector2( 3, 4 );
-      expect( ( viewport as any ).viewCenter.equals( expectedCenter ) ).to.be.true;
-      expect( ( viewport as any ).viewScale ).to.equal( 2 );
+      expect( viewport.viewCenter.equals( expectedCenter ) ).to.be.true;
+      expect( viewport.viewScale.x ).to.equal( 2 );
     } );
 
     it( 'should set center and scale with margin around content', (): void => {
@@ -85,8 +102,60 @@ describe( 'Viewport', (): void => {
 
       // Assert
       const expectedCenter = new Vector2( 3, 4 );
-      expect( ( viewport as any ).viewCenter.equals( expectedCenter ) ).to.be.true;
-      expect( ( viewport as any ).viewScale ).to.equal( 1 );
+      expect( viewport.viewCenter.equals( expectedCenter ) ).to.be.true;
+      expect( viewport.viewScale.x ).to.equal( 1 );
+    } );
+  } );
+
+  describe( 'fitToContextSize', (): void => {
+    it( 'should set scale and center one-to-one to context', (): void => {
+      // Arrange
+      const context = new TestContext();
+      context._size.set( 5, 6 );
+      const application = new Application( context );
+      const viewport = new Viewport( context, application );
+
+      // Act
+      viewport.fitToContextSize();
+
+      // Assert
+      const expectedCenter = new Vector2( 2.5, 3 );
+      expect( viewport.viewCenter.closeTo( expectedCenter ) ).to.be.true;
+      expect( viewport.viewScale.x ).to.equal( 1 );
+    } );
+  } );
+
+  describe( 'updateViewport', (): void => {
+    it( 'should limit center within box', (): void => {
+      // Arrange
+      const context = new TestContext();
+      context._size.set( 1, 2 );
+      const application = new Application( context );
+      const viewport = new Viewport( context, application );
+      viewport.viewCenterLimit.min.set( -10, -10 );
+      viewport.viewCenterLimit.max.set( 10, 10 );
+
+      // Act
+      viewport.viewCenter.set( 200, -200 );
+
+      // Assert
+      const expectedCenter = new Vector2( 10, -10 );
+      expect( viewport.viewCenter.closeTo( expectedCenter ) ).to.be.true;
+    } );
+
+    it( 'should limit view scale', (): void => {
+      // Arrange
+      const context = new TestContext();
+      context._size.set( 1, 2 );
+      const application = new Application( context );
+      const viewport = new Viewport( context, application );
+      viewport.scaleMax = 10;
+
+      // Act
+      viewport.viewScale.x = 200;
+
+      // Assert
+      expect( viewport.viewScale.x ).to.equal( 10 );
     } );
   } );
 } );

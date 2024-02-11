@@ -170,6 +170,7 @@ describe( 'InteractiveViewport', (): void => {
       context.domNode = domNode;
       const application = new Application( context );
       const viewport = new InteractiveViewport( context, application );
+      viewport.fitToContextSize();
 
       const startEvent = new MockEvent();
       startEvent.setOffsetPoint( 100, 100 );
@@ -178,7 +179,7 @@ describe( 'InteractiveViewport', (): void => {
       const endEvent = new MockEvent().setClientPoint( 2, 10 );
 
       const startCenter = new Vector2( 0.5, 0.5 );
-      expect( ( viewport as any ).viewCenter.equals( startCenter ) ).to.be.true;
+      expect( viewport.viewCenter.equals( startCenter ) ).to.be.true;
 
       // Act
       domNode.sendEvent( 'mousedown', startEvent );
@@ -187,7 +188,7 @@ describe( 'InteractiveViewport', (): void => {
 
       // Assert
       const expectedCenter = new Vector2( -0.5, -9.5 );
-      expect( ( viewport as any ).viewCenter.equals( expectedCenter ) ).to.be.true;
+      expect( viewport.viewCenter.equals( expectedCenter ) ).to.be.true;
     } );
 
     it( 'should invoke the redraw event when dragging', (): void => {
@@ -221,6 +222,7 @@ describe( 'InteractiveViewport', (): void => {
       context.domNode = domNode;
       const application = new Application( context );
       const viewport = new InteractiveViewport( context, application );
+      viewport.fitToContextSize();
 
       // Construct start event.
       const startEvent = new MockEvent();
@@ -236,7 +238,7 @@ describe( 'InteractiveViewport', (): void => {
 
       const endEvent = new MockEvent();
 
-      expect( ( viewport as any ).viewScale ).to.equal( 1 );
+      expect( viewport.viewScale.x ).to.equal( 1 );
 
       // Act
       domNode.sendEvent( 'mousedown', startEvent );
@@ -244,7 +246,7 @@ describe( 'InteractiveViewport', (): void => {
       global.document.sendEvent( 'mouseup', endEvent );
 
       // Assert
-      expect( ( viewport as any ).viewScale ).to.equal( 2 );
+      expect( viewport.viewScale.x ).to.equal( 2 );
     } );
 
     it( 'should update the viewport center during a multi touch drag', (): void => {
@@ -254,7 +256,8 @@ describe( 'InteractiveViewport', (): void => {
       context.domNode = domNode;
       const application = new Application( context );
       const viewport = new InteractiveViewport( context, application );
-      ( viewport as any ).viewCenter.set( 0, 77 );
+      // Set silent, because this test requires the initial viewport transformation matrix.
+      viewport.viewCenter.setSilent( 0, 77 );
 
       // Construct start event.
       const startEvent = new MockEvent();
@@ -277,7 +280,7 @@ describe( 'InteractiveViewport', (): void => {
 
       // Assert
       const expectedCenter = new Vector2( 0, 76 );
-      expect( ( viewport as any ).viewCenter.equals( expectedCenter ) ).to.be.true;
+      expect( viewport.viewCenter.equals( expectedCenter ) ).to.be.true;
     } );
 
     it( 'should update the viewport center during two multi touch drag events',
@@ -288,7 +291,8 @@ describe( 'InteractiveViewport', (): void => {
         context.domNode = domNode;
         const application = new Application( context );
         const viewport = new InteractiveViewport( context, application );
-        ( viewport as any ).viewCenter.set( 0, 77 );
+        viewport.viewScale.x = 1;
+        viewport.viewCenter.set( 0, 77 );
 
         // Construct start event.
         const startEvent = new MockEvent();
@@ -316,9 +320,9 @@ describe( 'InteractiveViewport', (): void => {
         global.document.sendEvent( 'mouseup', endEvent );
 
         // Assert
-        expect( ( viewport as any ).viewScale ).to.equal( 1 );
+        expect( viewport.viewScale.x ).to.equal( 1 );
         const expectedCenter = new Vector2( 0, 77 );
-        expect( ( viewport as any ).viewCenter.equals( expectedCenter ) ).to.be.true;
+        expect( viewport.viewCenter.equals( expectedCenter ) ).to.be.true;
       }
     );
 
@@ -329,6 +333,7 @@ describe( 'InteractiveViewport', (): void => {
       context.domNode = domNode;
       const application = new Application( context );
       const viewport = new InteractiveViewport( context, application );
+      viewport.fitToContextSize();
 
       // Construct start event.
       const startEvent = new MockEvent();
@@ -343,8 +348,8 @@ describe( 'InteractiveViewport', (): void => {
       const endEvent = new MockEvent();
 
       const startCenter = new Vector2( 0.5, 0.5 );
-      expect( ( viewport as any ).viewCenter.equals( startCenter ) ).to.be.true;
-      expect( ( viewport as any ).viewScale ).to.equal( 1 );
+      expect( viewport.viewCenter.equals( startCenter ) ).to.be.true;
+      expect( viewport.viewScale.x ).to.equal( 1 );
 
       // Act
       domNode.sendEvent( 'mousedown', startEvent );
@@ -352,8 +357,8 @@ describe( 'InteractiveViewport', (): void => {
       global.document.sendEvent( 'mouseup', endEvent );
 
       // Assert
-      expect( ( viewport as any ).viewCenter.equals( startCenter ) ).to.be.true;
-      expect( ( viewport as any ).viewScale ).to.equal( 1 );
+      expect( viewport.viewCenter.equals( startCenter ) ).to.be.true;
+      expect( viewport.viewScale.x ).to.equal( 1 );
     } );
 
     it( 'should deactivate selected elements when viewport area is clicked', (): void => {
@@ -411,18 +416,19 @@ describe( 'InteractiveViewport', (): void => {
       context.domNode = domNode;
       const application = new Application( context );
       const viewport = new InteractiveViewport( context, application );
+      viewport.fitToContextSize();
 
       const scrollEvent = new MockEvent();
       scrollEvent.setScrollDelta( 0, 2 );
       scrollEvent.setOffsetPoint( 0.5, 0.5 );
 
-      expect( ( viewport as any ).viewScale ).equals( 1 );
+      expect( viewport.viewScale.x ).equals( 1 );
 
       // Act
       domNode.sendEvent( 'wheel', scrollEvent );
 
       // Assert
-      expect( ( viewport as any ).viewScale ).to.be.closeTo( 0.909, 0.001 );
+      expect( viewport.viewScale.x ).to.be.closeTo( 0.909, 0.001 );
     } );
 
     it( 'should not update the viewport center when scrolling in the center', (): void => {
@@ -432,19 +438,20 @@ describe( 'InteractiveViewport', (): void => {
       context.domNode = domNode;
       const application = new Application( context );
       const viewport = new InteractiveViewport( context, application );
+      viewport.fitToContextSize();
 
       const scrollEvent = new MockEvent();
       scrollEvent.setScrollDelta( 0, 2 );
       scrollEvent.setOffsetPoint( 0.5, 0.5 );
 
       const startCenter = new Vector2( 0.5, 0.5 );
-      expect( ( viewport as any ).viewCenter.equals( startCenter ) ).to.be.true;
+      expect( viewport.viewCenter.equals( startCenter ) ).to.be.true;
 
       // Act
       domNode.sendEvent( 'wheel', scrollEvent );
 
       // Assert
-      expect( ( viewport as any ).viewCenter.equals( startCenter ) ).to.be.true;
+      expect( viewport.viewCenter.equals( startCenter ) ).to.be.true;
     } );
 
     it( 'should update the viewport center when not scrolling in the center', (): void => {
@@ -454,20 +461,21 @@ describe( 'InteractiveViewport', (): void => {
       context.domNode = domNode;
       const application = new Application( context );
       const viewport = new InteractiveViewport( context, application );
+      viewport.fitToContextSize();
 
       const scrollEvent = new MockEvent();
       scrollEvent.setScrollDelta( 0, 2 );
       scrollEvent.setOffsetPoint( 0.2, 0.2 );
 
       const startCenter = new Vector2( 0.5, 0.5 );
-      expect( ( viewport as any ).viewCenter.equals( startCenter ) ).to.be.true;
+      expect( viewport.viewCenter.equals( startCenter ) ).to.be.true;
 
       // Act
       domNode.sendEvent( 'wheel', scrollEvent );
 
       // Assert
       const expectedCenter = new Vector2( 0.53, 0.53 );
-      expect( ( viewport as any ).viewCenter.equals( expectedCenter ) ).to.be.true;
+      expect( viewport.viewCenter.equals( expectedCenter ) ).to.be.true;
     } );
   } );
 } );

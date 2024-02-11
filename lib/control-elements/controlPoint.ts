@@ -96,7 +96,7 @@ export class ControlPoint extends Group {
     const calculatedPosition = this.center.clone().transform( presentationNode.projectViewToNode );
 
     // Create copy of all points of the control object and set the calculated position.
-    let updatedPoints = this.controlObject.points.cloneDeep().elements;
+    let updatedPoints = this.controlObject.getDeepCopyOfPoints();
     updatedPoints[ this.controlIndex ].copy( calculatedPosition );
 
     // If a control modifier exists, then modify the points through it.
@@ -106,9 +106,7 @@ export class ControlPoint extends Group {
     }
 
     // Copy all coordinates back to the control object.
-    this.controlObject.points.iterate( ( element: Vector2, index: number ): void => {
-      element.copy( updatedPoints[ index ] );
-    } );
+    this.controlObject.writeUpdatesToPoints( updatedPoints );
 
     this.calculateOffset();
 

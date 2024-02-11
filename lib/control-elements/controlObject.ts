@@ -21,7 +21,7 @@ export abstract class ControlObject extends Group {
   public controlGuides: IControlGuide[] = [];
 
   // Array of custom shapes to be used for control points.
-  public controlPointShapes: ( StyledGraphicNode | null )[] = [];
+  public controlPointShapes: ( StyledGraphicNode | null | undefined )[] = [];
 
   // Array of button objects.
   public buttons: ButtonObject[] = [];
@@ -90,5 +90,27 @@ export abstract class ControlObject extends Group {
     } );
 
     return group;
+  }
+
+  /**
+   * Get a deep copy of the control points.
+   * The ControlPoint uses this method for the ControlModifiers. The method will be overwritten by
+   * ControlObjects that extend the Vector2 class with additional properties.
+   * @returns A deep copy of the control points.
+   */
+  public getDeepCopyOfPoints(): Vector2[] {
+    return this.points.cloneDeep().elements;
+  }
+
+  /**
+   * Copy updated coordinates back to the control points of this control.
+   * The ControlPoint uses this method for the ControlModifiers. The method will be overwritten by
+   * ControlObjects that extend the Vector2 class with additional properties.
+   * @param updatedPoints - The new coordinates to apply.
+   */
+  public writeUpdatesToPoints( updatedPoints: Vector2[] ): void {
+    this.points.iterate( ( element: Vector2, index: number ): void => {
+      element.copy( updatedPoints[ index ] );
+    } );
   }
 }

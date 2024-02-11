@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import * as sinon from 'sinon';
+import { spy } from 'sinon';
 
 import { StringValue, Vector2 } from '@daign/math';
 import { View } from '@daign/2d-pipeline';
@@ -32,13 +32,13 @@ describe( 'ControlObject', (): void => {
     it( 'should call redraw method when points array changes', (): void => {
       // Arrange
       const controlObject = new TestObject();
-      const spy = sinon.spy( controlObject, 'redraw' );
+      const redrawSpy = spy( controlObject, 'redraw' );
 
       // Act
       controlObject.points.initializeElements( 1 );
 
       // Assert
-      expect( spy.calledOnce ).to.be.true;
+      expect( redrawSpy.calledOnce ).to.be.true;
     } );
   } );
 
@@ -175,6 +175,55 @@ describe( 'ControlObject', (): void => {
 
       // Assert
       expect( node.children.length ).to.equal( 0 );
+    } );
+  } );
+
+  describe( 'getDeepCopyOfPoints', (): void => {
+    it( 'should return a copy of the control points', (): void => {
+      // Arrange
+      const points = [
+        new Vector2( 1, 2 ),
+        new Vector2( 2, 3 ),
+        new Vector2( 3, 4 )
+      ];
+      const controlObject = new TestObject();
+      controlObject.points.push( points[ 0 ] );
+      controlObject.points.push( points[ 1 ] );
+      controlObject.points.push( points[ 2 ] );
+
+      // Act
+      const result = controlObject.getDeepCopyOfPoints();
+
+      // Assert
+      expect( result.length ).to.equal( 3 );
+      expect( result[ 0 ].equals( points[ 0 ] ) ).to.be.true;
+      expect( result[ 1 ].equals( points[ 1 ] ) ).to.be.true;
+      expect( result[ 2 ].equals( points[ 2 ] ) ).to.be.true;
+    } );
+  } );
+
+  describe( 'writeUpdatesToPoints', (): void => {
+    it( 'should update the control points', (): void => {
+      // Arrange
+      const controlObject = new TestObject();
+      controlObject.points.push( new Vector2() );
+      controlObject.points.push( new Vector2() );
+      controlObject.points.push( new Vector2() );
+
+      const updatedPoints = [
+        new Vector2( 1, 2 ),
+        new Vector2( 2, 3 ),
+        new Vector2( 3, 4 )
+      ];
+
+      // Act
+      controlObject.writeUpdatesToPoints( updatedPoints );
+
+      // Assert
+      expect( controlObject.points.length ).to.equal( 3 );
+      expect( controlObject.points.getElement( 0 )!.equals( updatedPoints[ 0 ] ) ).to.be.true;
+      expect( controlObject.points.getElement( 1 )!.equals( updatedPoints[ 1 ] ) ).to.be.true;
+      expect( controlObject.points.getElement( 2 )!.equals( updatedPoints[ 2 ] ) ).to.be.true;
     } );
   } );
 } );
